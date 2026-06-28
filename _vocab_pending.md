@@ -8,3 +8,6 @@ Write each word on a new line under today's date heading.
 
 ## 2026-07-13
 neglect
+
+## 2026-06-29
+hive — 蜂巢；a hive of activity 繁忙景象；《生化危机》地下蜂巢城市
