@@ -159,7 +159,17 @@
   body.dark .vocab-card .vs.lern{background:#4a2a0a;color:#ffb74d}
   body.dark .vocab-card .vs.mast{background:#1a3a1a;color:#81c784}
 
+  /* ── Float Actions (Dark / Fullscreen) ── */
+  .float-actions{position:fixed;bottom:28px;right:28px;display:flex;gap:12px;z-index:9999;opacity:.35;transition:opacity .35s}
+  .float-actions:hover,.float-actions:focus-within{opacity:1}
+  .float-btn{width:44px;height:44px;border-radius:50%;border:none;background:rgba(74,144,217,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#555;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 14px rgba(0,0,0,.1);transition:all .25s;user-select:none}
+  .float-btn:hover{background:rgba(74,144,217,.25);transform:scale(1.12);box-shadow:0 4px 20px rgba(0,0,0,.18)}
+  .float-btn:active{transform:scale(.95)}
+  body.dark .float-btn{background:rgba(108,180,238,.1);color:#bbb;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+  body.dark .float-btn:hover{background:rgba(108,180,238,.22);color:#e8e8e8}
   @media(max-width:480px){
+    .float-actions{bottom:20px;right:20px;gap:10px}
+    .float-btn{width:40px;height:40px;font-size:18px}
     .toolbar h1{font-size:18px}
     .week-btn{padding:6px 10px;font-size:12px}
     .top-bar{padding:10px 12px 0}
@@ -185,15 +195,12 @@
     <div class="toolbar">
       <h1>📚 Echo</h1>
       <div style="display:flex;align-items:center;gap:6px">
+        <button class="today-btn" id="vocabBtn">📕 生词本</button>
         <button class="today-btn" id="todayBtn">📅 Today</button>
-        <div class="toolbar-actions">
-          <button class="toolbar-btn" id="darkBtn" title="Dark mode">🌙</button>
-          <button class="toolbar-btn" id="fsBtn" title="Fullscreen">⛶</button>
-        </div>
       </div>
     </div>
     <div class="week-tabs" id="weekTabs"></div>
-    <button class="vb-btn" id="vocabBtn" style="margin:4px 0 0 16px;padding:5px 12px;font-size:12px">📕 生词本</button>
+
     <div class="cat-tabs" id="catTabs" style="margin-top:6px"></div>
   </div>
 
@@ -228,8 +235,6 @@
       <button class="ts-btn" id="tsWord" title="Today's Word">💡</button>
     </div>
     <div class="spacer"></div>
-    <button class="dt-btn" id="darkBtn2" title="Dark mode">🌙</button>
-    <button class="dt-btn" id="fsBtn2" title="Fullscreen">⛶</button>
   </div>
   <div class="lesson-frame"><iframe id="iframe"></iframe></div>
 </div>
@@ -238,7 +243,6 @@
   <div class="vocab-top">
     <button class="vb-btn" id="vbBack">← Home</button>
     <h2>📕 Vocab Book</h2>
-    <button class="toolbar-btn" id="darkBtn3" title="Dark mode">🌙</button>
   </div>
   <div class="vocab-vt" id="vocabTabs">
     <button class="active" data-vt="lern">🔴 Learning</button>
@@ -249,6 +253,11 @@
     <button class="active" data-vs="date">By Date ↓</button>
   </div>
   <div id="vocabList"></div>
+</div>
+
+<div class="float-actions" id="floatActions">
+  <button class="float-btn" id="darkBtn" title="Dark mode">🌙</button>
+  <button class="float-btn" id="fsBtn" title="Fullscreen">⛶</button>
 </div>
 
 <script>
@@ -619,11 +628,8 @@ function goFullscreen(){
   if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}
 }
 document.getElementById('fsBtn').addEventListener('click',goFullscreen);
-document.getElementById('fsBtn2').addEventListener('click',goFullscreen);
 document.addEventListener('fullscreenchange',function(){
-  var t=document.fullscreenElement?'✕':'⛶';
-  document.getElementById('fsBtn').textContent=t;
-  document.getElementById('fsBtn2').textContent=t;
+  document.getElementById('fsBtn').textContent=document.fullscreenElement?'✕':'⛶';
 });
 
 /* ===== DARK MODE ===== */
@@ -631,17 +637,11 @@ function toggleDark(){
   document.body.classList.toggle('dark');
   var isDark=document.body.classList.contains('dark');
   document.getElementById('darkBtn').textContent=isDark?'☀️':'🌙';
-  document.getElementById('darkBtn2').textContent=isDark?'☀️':'🌙';
-  document.getElementById('darkBtn3').textContent=isDark?'☀️':'🌙';
   try{sessionStorage.setItem('ed',isDark?'1':'0')}catch(e){}
 }
 document.getElementById('darkBtn').addEventListener('click',toggleDark);
-document.getElementById('darkBtn2').addEventListener('click',toggleDark);
-document.getElementById('darkBtn3').addEventListener('click',toggleDark);
 try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');
-document.getElementById('darkBtn').textContent='☀️';
-document.getElementById('darkBtn2').textContent='☀️';
-document.getElementById('darkBtn3').textContent='☀️'}}catch(e){}
+document.getElementById('darkBtn').textContent='☀️'}}catch(e){}
 
 /* ===== TODAY ===== */
 var _tdL=null,_tdW=null;
