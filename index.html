@@ -9,37 +9,45 @@
 <title>Echo English · Lance</title>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.6;color:#1a1a2e;background:#f8f9fa;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.6;color:#222;background:#fff;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 
   /* ── Dark Mode ── */
-  body.dark{background:#0f0f1a;color:#e0e0e0}
-  body.dark .card{background:#16213e;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-  body.dark .stat{background:#16213e}
-  body.dark .tab-btn{color:#6c757d}
-  body.dark .tab-btn.active{color:#6cb4ee;border-bottom-color:#6cb4ee}
-  body.dark .cat-btn{color:#6c757d;background:#1a1a2e}
-  body.dark .cat-btn.active{background:#16213e;color:#6cb4ee}
-  body.dark .week-btn{color:#6c757d}
-  body.dark .week-btn.active{color:#6cb4ee}
-  body.dark .item{background:#1a1a2e}
-  body.dark .item .title{color:#e0e0e0}
-  body.dark .item .meta{color:#888}
+  body.dark{background:#0f0f1a;color:#e8e8e8}
+  body.dark .top-bar{background:#0f0f1a}
+  body.dark .week-btn{color:#666}
+  body.dark .week-btn.active{color:#6cb4ee;border-bottom-color:#6cb4ee}
+  body.dark .cat-btn{color:#999;background:#1a1a2e}
+  body.dark .cat-btn.active{background:#2d2d5e;color:#6cb4ee}
+  body.dark .item{background:#1a1a2e;border:1px solid #2d2d5e}
+  body.dark .item .title{color:#e8e8e8}
+  body.dark .item .meta{color:#999}
   body.dark .focus-card{background:linear-gradient(135deg,#1a237e,#311b92) !important}
-  body.dark .toolbar-btn{background:#1a1a2e;color:#adb5bd;border-color:#2d3436}
-  body.dark .login-box{background:#16213e}
-  body.dark .login-box input{background:#1a1a2e;border-color:#2d3436;color:#e0e0e0}
-  body.dark .login-box h1{color:#e0e0e0}
-  body.dark .back-btn{background:#1a1a2e;border-color:#2d3436;color:#adb5bd}
-  body.dark .lesson-frame{border-color:#2d3436;background:#16213e}
+  body.dark .focus-card .fi-t{color:#e8e8e8}
+  body.dark .focus-card .fi-s{color:#aaa}
+  body.dark .toolbar-btn{background:#1a1a2e;color:#bbb;border-color:#2d2d5e}
+  body.dark .login-box{background:#1a1a2e}
+  body.dark .login-box input{background:#0f0f1a;border-color:#2d2d5e;color:#e8e8e8}
+  body.dark .login-box h1{color:#e8e8e8}
+  body.dark .login-box p{color:#999}
+  body.dark .detail-top{background:#0f0f1a}
+  body.dark .detail-top .back-btn{background:#1a1a2e;border-color:#2d2d5e;color:#bbb}
+  body.dark .detail-top .dt-btn{background:#1a1a2e;border-color:#2d2d5e;color:#bbb}
+  body.dark .lesson-frame{border-color:#2d2d5e;background:#1a1a2e}
   body.dark .footer{color:#444}
+  body.dark .section-label{color:#999}
+  body.dark .empty{color:#555}
+  body.dark .history-btn{background:#1a1a2e;border-color:#2d2d5e;color:#999}
+  body.dark .history-btn:hover{background:#2d2d5e}
+  body.dark .word-pill{background:#2d1a1a;border-color:#4a2a2a}
+  body.dark .word-pill .wp-t{color:#e8e8e8}
 
   /* ── Login ── */
   #login-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:#0f0f1a;display:flex;align-items:center;justify-content:center;z-index:9999}
   #login-screen.hidden{display:none}
-  .login-box{background:#16213e;border-radius:16px;padding:36px 28px;width:88%;max-width:360px;text-align:center}
-  .login-box h1{font-size:22px;color:#e0e0e0;margin-bottom:4px}
-  .login-box p{font-size:14px;color:#888;margin-bottom:20px}
-  .login-box input{width:100%;padding:14px;border:1px solid #2d3436;border-radius:10px;background:#0f0f1a;color:#e0e0e0;font-size:16px;outline:none}
+  .login-box{background:#1a1a2e;border-radius:16px;padding:36px 28px;width:88%;max-width:360px;text-align:center}
+  .login-box h1{font-size:22px;color:#e8e8e8;margin-bottom:4px}
+  .login-box p{font-size:14px;color:#999;margin-bottom:20px}
+  .login-box input{width:100%;padding:14px;border:1px solid #2d2d5e;border-radius:10px;background:#0f0f1a;color:#e8e8e8;font-size:16px;outline:none}
   .login-box input:focus{border-color:#6cb4ee}
   .login-box button{width:100%;padding:14px;margin-top:10px;background:#4a90d9;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
   .login-box .error{color:#ef5350;font-size:13px;margin-top:8px;display:none}
@@ -48,73 +56,72 @@
   #content{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
   #content.show{display:block}
 
-  .top-bar{position:sticky;top:0;z-index:100;background:#f8f9fa;padding:16px 16px 0;transition:background .3s}
-  body.dark .top-bar{background:#0f0f1a}
+  .top-bar{position:sticky;top:0;z-index:100;background:#fff;padding:12px 16px 0;transition:background .3s}
 
-  /* ── Toolbar ── */
-  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
   .toolbar h1{font-size:20px;font-weight:700}
   .toolbar-actions{display:flex;gap:6px}
-  .toolbar-btn{width:36px;height:36px;border-radius:8px;border:1px solid #e9ecef;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s}
+  .toolbar-btn{width:36px;height:36px;border-radius:8px;border:1px solid #e0e0e0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
 
   /* ── Week Tabs ── */
   .week-tabs{display:flex;gap:0;overflow-x:auto;padding:4px 0 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .week-tabs::-webkit-scrollbar{display:none}
-  .week-btn{flex-shrink:0;padding:8px 14px;font-size:13px;font-weight:600;color:#6c757d;background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
-  .week-btn.active{color:#1a1a2e;border-bottom-color:#4a90d9}
+  .week-btn{flex-shrink:0;padding:8px 14px;font-size:13px;font-weight:600;color:#999;background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  .week-btn.active{color:#222;border-bottom-color:#4a90d9}
+  .history-btn{flex-shrink:0;padding:8px 10px;font-size:11px;font-weight:600;background:none;border:1px solid #e0e0e0;border-radius:6px;cursor:pointer;color:#999;white-space:nowrap;margin-left:auto}
 
   /* ── Category Tabs ── */
-  .cat-tabs{display:flex;gap:8px;margin:0 0 12px}
-  .cat-btn{padding:6px 16px;border-radius:16px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:#e9ecef;color:#495057;transition:all .2s}
+  .cat-tabs{display:flex;gap:8px;margin:0 0 10px}
+  .cat-btn{padding:5px 14px;border-radius:14px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:#e8e8e8;color:#666}
   .cat-btn.active{background:#4a90d9;color:#fff}
+
+  /* ── Word Pill ── */
+  .word-pill{display:none;background:#fff5f5;border:1px solid #fce4ec;border-radius:10px;padding:10px 14px;margin:0 0 10px;align-items:center;gap:10px}
+  .word-pill.show{display:flex}
+  .word-pill .wp-i{font-size:20px}
+  .word-pill .wp-info{flex:1}
+  .word-pill .wp-t{font-size:14px;font-weight:600}
+  .word-pill .wp-s{font-size:11px;color:#999}
+  .word-pill .wp-b{padding:6px 14px;background:#c62828;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0}
 
   /* ── Focus Card ── */
   .focus-card{display:none;background:linear-gradient(135deg,#e3f2fd,#f3e5f5);border-radius:12px;padding:14px 16px;margin:0 0 14px}
   .focus-card.show{display:flex;align-items:center;gap:12px}
   .focus-card .fi{flex:1}
-  .focus-card .fi-t{font-size:14px;font-weight:600;color:#1a1a2e}
-  .focus-card .fi-s{font-size:12px;color:#6c757d;margin-top:2px}
+  .focus-card .fi-t{font-size:14px;font-weight:600;color:#222}
+  .focus-card .fi-s{font-size:12px;color:#666;margin-top:2px}
   .focus-card .fi-b{padding:7px 16px;background:#4a90d9;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0}
 
   /* ── Items ── */
-  .section-label{font-size:12px;font-weight:600;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin:0 0 8px}
-  .item{background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:6px;box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer;display:flex;align-items:center;gap:10px;transition:box-shadow .2s}
-  .item:active{box-shadow:0 1px 6px rgba(0,0,0,.1)}
+  .section-label{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.5px;margin:0 0 6px}
+  .item{background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:6px;border:1px solid #f0f0f0;cursor:pointer;display:flex;align-items:center;gap:10px}
   .item .ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
   .item .info{flex:1;min-width:0}
   .item .title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .item .meta{font-size:11px;color:#6c757d;margin-top:1px}
+  .item .meta{font-size:11px;color:#999;margin-top:1px}
   .item .tag{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600;flex-shrink:0}
   .tag.today{background:#fff3e0;color:#e65100}
   .tag.done{background:#e8f5e9;color:#2e7d32}
   .tag.upcoming{background:#e3f2fd;color:#1565c0}
-  .tag.word{background:#fce4ec;color:#c62828;font-size:9px}
 
   /* ── Detail ── */
   #detail{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
   #detail.show{display:block}
-  .detail-top{position:sticky;top:0;z-index:100;background:#f8f9fa;padding:12px 16px;display:flex;align-items:center;gap:8px;transition:background .3s}
-  body.dark .detail-top{background:#0f0f1a}
-  .detail-top .back-btn{padding:7px 12px;background:#fff;border:1px solid #e9ecef;border-radius:8px;cursor:pointer;font-size:13px;color:#495057;display:flex;align-items:center;gap:4px;flex-shrink:0}
-  body.dark .detail-top .back-btn{background:#1a1a2e;border-color:#2d3436;color:#adb5bd}
+  .detail-top{position:sticky;top:0;z-index:100;background:#fff;padding:12px 16px;display:flex;align-items:center;gap:8px}
+  .detail-top .back-btn{padding:7px 12px;background:#fff;border:1px solid #e0e0e0;border-radius:8px;cursor:pointer;font-size:13px;color:#666;display:flex;align-items:center;gap:4px;flex-shrink:0}
   .detail-top .spacer{flex:1}
-  .detail-top .dt-btn{width:34px;height:34px;border-radius:8px;border:1px solid #e9ecef;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
-  body.dark .detail-top .dt-btn{background:#1a1a2e;border-color:#2d3436;color:#adb5bd}
-  .lesson-frame{border:1px solid #e9ecef;border-radius:12px;overflow:hidden;background:#fff;margin:0 16px 16px}
+  .detail-top .dt-btn{width:34px;height:34px;border-radius:8px;border:1px solid #e0e0e0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+  .lesson-frame{border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;background:#fff;margin:0 16px 16px}
   .lesson-frame iframe{width:100%;height:100dvh;border:none;display:block}
 
-  /* ── Empty State ── */
-  .empty{padding:40px 20px;text-align:center;color:#adb5bd;font-size:14px;line-height:1.8}
+  .empty{padding:40px 20px;text-align:center;color:#bbb;font-size:14px;line-height:1.8}
   .empty .big{font-size:36px;margin-bottom:8px}
-
-  /* ── Footer ── */
-  .footer{text-align:center;padding:24px 0;font-size:11px;color:#adb5bd}
+  .footer{text-align:center;padding:24px 0;font-size:11px;color:#ccc}
 
   @media(max-width:480px){
     .toolbar h1{font-size:18px}
     .week-btn{padding:6px 10px;font-size:12px}
-    .top-bar{padding:12px 12px 0}
-    #content{padding:0 0 40px}
+    .top-bar{padding:10px 12px 0}
     .item{padding:10px 12px}
     .item .title{font-size:13px}
   }
@@ -122,78 +129,78 @@
 </head>
 <body>
 
-<!-- Login -->
 <div id="login-screen">
   <div class="login-box">
     <h1>🔐 Echo English</h1>
     <p>Lance's Learning Hub</p>
-    <input type="password" id="pw" placeholder="Enter password" autofocus onkeydown="if(event.key==='Enter')login()">
-    <button onclick="login()">Unlock</button>
+    <input type="password" id="pw" placeholder="Enter password" autofocus>
+    <button id="loginBtn">Unlock</button>
     <div class="error" id="login-err">Incorrect password</div>
   </div>
 </div>
 
-<!-- Main -->
 <div id="content">
   <div class="top-bar">
     <div class="toolbar">
       <h1>📚 Echo</h1>
       <div class="toolbar-actions">
-        <button class="toolbar-btn" onclick="toggleDark()" id="darkBtn" title="Dark mode">🌙</button>
-        <button class="toolbar-btn" onclick="goFullscreen()" id="fsBtn" title="Fullscreen">⛶</button>
+        <button class="toolbar-btn" id="darkBtn" title="Dark mode">🌙</button>
+        <button class="toolbar-btn" id="fsBtn" title="Fullscreen">⛶</button>
       </div>
     </div>
     <div class="week-tabs" id="weekTabs"></div>
-    <div class="cat-tabs" id="catTabs" style="margin-top:8px"></div>
+    <div class="cat-tabs" id="catTabs" style="margin-top:6px"></div>
   </div>
 
-  <!-- Focus Card -->
-  <div class="focus-card" id="focusCard">
-    <div class="fi">
-      <div class="fi-t" id="focusTitle"></div>
-      <div class="fi-s" id="focusMeta"></div>
+  <div style="padding:0 16px">
+    <div class="word-pill" id="wordPill" style="margin-top:10px">
+      <div class="wp-i">💡</div>
+      <div class="wp-info">
+        <div class="wp-t" id="wordTitle"></div>
+        <div class="wp-s" id="wordMeta">Today's Word</div>
+      </div>
+      <button class="wp-b" id="wordBtn">Open</button>
     </div>
-    <button class="fi-b" onclick="openFocus()">▶ Open</button>
-  </div>
 
-  <!-- List -->
-  <div id="itemList"></div>
+    <div class="focus-card" id="focusCard">
+      <div class="fi">
+        <div class="fi-t" id="focusTitle"></div>
+        <div class="fi-s" id="focusMeta"></div>
+      </div>
+      <button class="fi-b" id="focusBtn">▶ Open</button>
+    </div>
+
+    <div id="itemList"></div>
+  </div>
   <div class="footer">Echo · daily</div>
 </div>
 
-<!-- Detail -->
 <div id="detail">
   <div class="detail-top">
-    <button class="back-btn" onclick="closeDetail()">← Back</button>
+    <button class="back-btn" id="backBtn">← Back</button>
     <div class="spacer"></div>
-    <button class="dt-btn" onclick="toggleDark()" id="darkBtn2" title="Dark mode">🌙</button>
-    <button class="dt-btn" onclick="goFullscreen()" id="fsBtn2" title="Fullscreen">⛶</button>
+    <button class="dt-btn" id="darkBtn2" title="Dark mode">🌙</button>
+    <button class="dt-btn" id="fsBtn2" title="Fullscreen">⛶</button>
   </div>
-  <div class="lesson-frame"><iframe id="iframe" srcdoc=""></iframe></div>
+  <div class="lesson-frame"><iframe id="iframe"></iframe></div>
 </div>
 
 <script>
-/* ===== CONFIG ===== */
-var PWH = 'b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f346584520e0c';
-
-var lessons = [
-  // Week 1: Jun 28 - Jul 5
-  {d:'2026-06-28',w:'Mon',t:'leverage',i:'💡',g:'word',f:'lessons/2026-06-28_wotd_leverage.html'},
-  {d:'2026-06-29',w:'Mon',t:'职场表达 · SA自我介绍',i:'🏢',g:'lesson',f:'lessons/2026-06-29_monday_workplace.html'},
+var PWH='b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f346584520e0c';
+var lessons=[
+  {d:'2026-06-28',w:'Sun',t:'leverage',i:'💡',g:'word',f:'lessons/2026-06-28_wotd_leverage.html'},
+  {d:'2026-06-29',w:'Mon',t:'SA自我介绍',i:'🏢',g:'lesson',f:'lessons/2026-06-29_monday_workplace.html'},
   {d:'2026-06-29',w:'Mon',t:'tailor',i:'💡',g:'word',f:'lessons/2026-06-29_wotd_tailor.html'},
-  {d:'2026-06-30',w:'Tue',t:'阅读训练 · AI文章',i:'📖',g:'lesson',f:'lessons/2026-06-30_tuesday_reading.html'},
+  {d:'2026-06-30',w:'Tue',t:'AI文章阅读',i:'📖',g:'lesson',f:'lessons/2026-06-30_tuesday_reading.html'},
   {d:'2026-06-30',w:'Tue',t:'identify',i:'💡',g:'word',f:'lessons/2026-06-30_wotd_identify.html'},
-  {d:'2026-07-01',w:'Wed',t:'口语场景 · 向客户介绍AI',i:'🎤',g:'lesson',f:'lessons/2026-07-01_wednesday_speaking.html'},
+  {d:'2026-07-01',w:'Wed',t:'向客户介绍AI',i:'🎤',g:'lesson',f:'lessons/2026-07-01_wednesday_speaking.html'},
   {d:'2026-07-01',w:'Wed',t:'enable',i:'💡',g:'word',f:'lessons/2026-07-01_wotd_enable.html'},
-  {d:'2026-07-02',w:'Thu',t:'词汇升级 · 5组动词升级',i:'🔥',g:'lesson',f:'lessons/2026-07-02_thursday_vocab.html'},
+  {d:'2026-07-02',w:'Thu',t:'词汇升级·动词',i:'🔥',g:'lesson',f:'lessons/2026-07-02_thursday_vocab.html'},
   {d:'2026-07-02',w:'Thu',t:'implement',i:'💡',g:'word',f:'lessons/2026-07-02_wotd_implement.html'},
-  {d:'2026-07-03',w:'Fri',t:'听力训练 · TED影子跟读',i:'🎬',g:'lesson',f:'lessons/2026-07-03_friday_listening.html'},
+  {d:'2026-07-03',w:'Fri',t:'TED影子跟读',i:'🎬',g:'lesson',f:'lessons/2026-07-03_friday_listening.html'},
   {d:'2026-07-03',w:'Fri',t:'optimize',i:'💡',g:'word',f:'lessons/2026-07-03_wotd_optimize.html'},
   {d:'2026-07-04',w:'Sat',t:'align',i:'💡',g:'word',f:'lessons/2026-07-04_wotd_align.html'},
   {d:'2026-07-05',w:'Sun',t:'streamline',i:'💡',g:'word',f:'lessons/2026-07-05_wotd_streamline.html'},
-  {d:'2026-07-05',w:'Sun',t:'外教课准备包',i:'🎯',g:'lesson',f:'lessons/2026-07-05_sunday_class_prep.html'},
-
-  // Week 2: Jul 6 - 12 (words only, lessons ready by Sun 7/5)
   {d:'2026-07-06',w:'Mon',t:'negotiate',i:'💡',g:'word',f:'lessons/2026-07-06_wotd_negotiate.html'},
   {d:'2026-07-07',w:'Tue',t:'automate',i:'💡',g:'word',f:'lessons/2026-07-07_wotd_automate.html'},
   {d:'2026-07-08',w:'Wed',t:'demonstrate',i:'💡',g:'word',f:'lessons/2026-07-08_wotd_demonstrate.html'},
@@ -202,170 +209,185 @@ var lessons = [
   {d:'2026-07-11',w:'Sat',t:'integrate',i:'💡',g:'word',f:'lessons/2026-07-11_wotd_integrate.html'},
   {d:'2026-07-12',w:'Sun',t:'adopt',i:'💡',g:'word',f:'lessons/2026-07-12_wotd_adopt.html'}
 ];
+var currentWeek='',currentCat='all',todayStr='',showHistory=false;
 
-/* ===== STATE ===== */
-let currentWeek = '';
-let currentCat = 'all';
-let todayStr; // set in init()
+/* ===== Beijing Date ===== */
+function getBeijingDate(){
+  var d=new Date();
+  // Asia/Shanghai (CST, UTC+8) - covers Beijing time
+  var opts={timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'};
+  var parts=new Intl.DateTimeFormat('en-CA',opts).formatToParts(d);
+  return parts[0].value+'-'+parts[2].value+'-'+parts[4].value;
+}
 
-/* ===== PASSWORD - SHA-256 ===== */
+/* ===== PASSWORD ===== */
 async function sha256(s){
-  const b=new TextEncoder().encode(s);
-  const h=await crypto.subtle.digest('SHA-256',b);
-  return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
+  var b=new TextEncoder().encode(s);
+  var h=await crypto.subtle.digest('SHA-256',b);
+  return Array.from(new Uint8Array(h)).map(function(x){return x.toString(16).padStart(2,'0')}).join('');
 }
 async function login(){
-  const v=document.getElementById('pw').value;
+  var v=document.getElementById('pw').value;
   if(await sha256(v)===PWH){
     document.getElementById('login-screen').classList.add('hidden');
-    init()
+    init();
   }else{
     document.getElementById('login-err').style.display='block';
-    document.getElementById('pw').value='';
-    document.getElementById('pw').focus()
+    document.getElementById('pw').value='';document.getElementById('pw').focus();
   }
 }
+document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')login()});
+document.getElementById('loginBtn').addEventListener('click',login);
 
 /* ===== INIT ===== */
 function init(){
   document.getElementById('content').classList.add('show');
-  todayStr=new Date().toISOString().slice(0,10);
+  todayStr=getBeijingDate();
   buildWeeks();
   restoreState();
   render();
 }
-
-function getWeekStart(d){const dt=new Date(d);const day=dt.getDay();const diff=dt.getDate()-day+(day===0?-6:1);dt.setDate(diff);return dt.toISOString().slice(0,10)}
-function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10)}
+function getWeekStart(d){var dt=new Date(d);var day=dt.getDay();var diff=dt.getDate()-day+(day===0?-6:1);dt.setDate(diff);return dt.toISOString().slice(0,10)}
+function addDays(d,n){var dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10)}
 
 /* ===== BUILD WEEKS ===== */
 function buildWeeks(){
-  const groups={};
-  lessons.forEach(l=>{const ws=getWeekStart(l.d);if(!groups[ws])groups[ws]=[];groups[ws].push(l)});
-  const keys=Object.keys(groups).sort();
-  const tabs=document.getElementById('weekTabs');
+  var groups={};
+  lessons.forEach(function(l){var ws=getWeekStart(l.d);if(!groups[ws])groups[ws]=[];groups[ws].push(l)});
+  var keys=Object.keys(groups).sort();
+  var tabs=document.getElementById('weekTabs');
   tabs.innerHTML='';
 
-  // Find current week
-  const todayStr2=new Date().toISOString().slice(0,10);
-  let found=false;
-  keys.forEach(k=>{
-    const end=addDays(k,6);
-    const btn=document.createElement('button');
-    btn.className='week-btn';
-    btn.textContent=`${k.slice(5)}-${end.slice(5)}`;
-    btn.dataset.week=k;
-    btn.onclick=()=>switchWeek(k);
-    tabs.appendChild(btn);
-    if(todayStr2>=k&&todayStr2<=end&&!found){currentWeek=k;found=true}
+  var now=todayStr;
+  var found=false;
+  var pastKeys=[];
+  keys.forEach(function(k){
+    var end=addDays(k,6);
+    if(now>=k&&now<=end&&!found){currentWeek=k;found=true}
+    if(end<now)pastKeys.push(k);
   });
   if(!currentWeek&&keys.length>0)currentWeek=keys[keys.length-1];
 
-  // Category tabs (inside top bar after week tabs)
-  const ct=document.getElementById('catTabs');
+  // Show current + future weeks as tabs
+  keys.forEach(function(k){
+    var end=addDays(k,6);
+    if(end<now)return; // skip past weeks
+    var btn=document.createElement('button');
+    btn.className='week-btn';
+    btn.textContent=k.slice(5)+'-'+end.slice(5);
+    btn.dataset.week=k;
+    btn.addEventListener('click',function(){switchWeek(k)});
+    tabs.appendChild(btn);
+  });
+
+  // History button for past weeks
+  if(pastKeys.length>0){
+    var hb=document.createElement('button');
+    hb.className='history-btn';
+    hb.textContent='📜 Past';
+    hb.addEventListener('click',function(){toggleHistory()});
+    tabs.appendChild(hb);
+  }
+
+  var ct=document.getElementById('catTabs');
   ct.innerHTML='';
-  ['all','lessons','words'].forEach(c=>{
-    const b=document.createElement('button');
+  ['all','lessons','words'].forEach(function(c){
+    var b=document.createElement('button');
     b.className='cat-btn'+(c===currentCat?' active':'');
     b.textContent=c==='all'?'All':c==='lessons'?'📖 Lessons':'💡 Words';
-    b.onclick=()=>switchCat(c);
+    b.addEventListener('click',function(){switchCat(c)});
     ct.appendChild(b);
   });
 }
 
-/* ===== SWITCH ===== */
-function switchWeek(w){
-  currentWeek=w;
-  saveState();
+function toggleHistory(){
+  showHistory=!showHistory;
   render();
-  document.querySelectorAll('.week-btn').forEach(b=>b.classList.toggle('active',b.dataset.week===w));
-}
-function switchCat(c){
-  currentCat=c;
-  saveState();
-  render();
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.toggle('active',b.textContent.includes(c==='all'?'All':c==='lessons'?'Lessons':'Words')));
+  document.querySelector('.history-btn').textContent=showHistory?'✕ Close':'📜 Past';
 }
 
+/* ===== SWITCH ===== */
+function switchWeek(w){
+  currentWeek=w;showHistory=false;saveState();render();
+  document.querySelectorAll('.week-btn').forEach(function(b){b.classList.toggle('active',b.dataset.week===w)});
+}
+function switchCat(c){
+  currentCat=c;saveState();render();
+  document.querySelectorAll('.cat-btn').forEach(function(b){
+    b.classList.toggle('active',b.textContent.indexOf(c==='all'?'All':c==='lessons'?'Lessons':'Words')>=0);
+  });
+}
 function saveState(){
   try{sessionStorage.setItem('ew',currentWeek);sessionStorage.setItem('ec',currentCat)}catch(e){}
 }
 function restoreState(){
-  try{
-    const w=sessionStorage.getItem('ew');if(w)currentWeek=w;
-    const c=sessionStorage.getItem('ec');if(c)currentCat=c;
-  }catch(e){}
+  try{var w=sessionStorage.getItem('ew');if(w)currentWeek=w;
+  var c=sessionStorage.getItem('ec');if(c)currentCat=c}catch(e){}
 }
 
 /* ===== RENDER ===== */
 function render(){
-  const end=addDays(currentWeek,6);
-  let items=lessons.filter(l=>l.d>=currentWeek&&l.d<=end);
-  if(currentCat==='lessons'){items=items.filter(l=>l.g==='lesson')}
-  else if(currentCat==='words'){items=items.filter(l=>l.g==='word')}
+  var end=addDays(currentWeek,6);
+  var items=lessons.filter(function(l){return l.d>=currentWeek&&l.d<=end});
+  if(!showHistory){
+    items=items.filter(function(l){return l.d>=todayStr||l.d===currentWeek});
+  }
+  if(currentCat==='lessons'){items=items.filter(function(l){return l.g==='lesson'})}
+  else if(currentCat==='words'){items=items.filter(function(l){return l.g==='word'})}
 
-  // Update tab highlights
-  document.querySelectorAll('.week-btn').forEach(b=>b.classList.toggle('active',b.dataset.week===currentWeek));
-  document.querySelectorAll('.cat-btn').forEach(b=>{
-    const c=b.textContent.includes('All')?'all':b.textContent.includes('Lessons')?'lessons':'words';
-    b.classList.toggle('active',c===currentCat);
-  });
+  // Word pill
+  var wp=document.getElementById('wordPill');
+  var wordItem=items.filter(function(l){return l.g==='word'&&l.d===todayStr})[0];
+  if(wordItem){
+    wp.classList.add('show');
+    document.getElementById('wordTitle').textContent=wordItem.t;
+    document.getElementById('wordMeta').textContent=todayStr+' · '+wordItem.w;
+    document.getElementById('wordBtn').onclick=function(){openItem(wordItem)};
+  }else{wp.classList.remove('show')}
 
   // Focus card
-  const fc=document.getElementById('focusCard');
-  const todayItems=items.filter(l=>l.d===todayStr);
-  if(todayItems.length>0){
+  var fc=document.getElementById('focusCard');
+  var lessonItem=items.filter(function(l){return l.g==='lesson'&&l.d===todayStr})[0];
+  if(lessonItem){
     fc.classList.add('show');
-    document.getElementById('focusTitle').textContent=todayItems[0].t;
-    document.getElementById('focusMeta').textContent=todayStr+' · '+todayItems[0].w+(todayItems[0].g==='word'?' · Word':'');
-    window._focusItem=todayItems[0];
+    document.getElementById('focusTitle').textContent=lessonItem.t;
+    document.getElementById('focusMeta').textContent=todayStr+' · '+lessonItem.w;
+    document.getElementById('focusBtn').onclick=function(){openItem(lessonItem)};
   }else{fc.classList.remove('show')}
 
   // List
-  const list=document.getElementById('itemList');
+  var list=document.getElementById('itemList');
   list.innerHTML='';
-
   if(items.length===0){
-    list.innerHTML='<div class="empty"><div class="big">📭</div>No content yet<br>Content will be ready by Sunday evening</div>';
+    list.innerHTML='<div class="empty"><div class="big">📭</div>Nothing here yet</div>';
     return;
   }
-
-  // Sort by date, then by type (lesson first, then word)
-  const sorted=[...items].sort((a,b)=>{
-    if(a.d!==b.d)return a.d.localeCompare(b.d);
+  var sorted=[].concat(items).sort(function(a,b){
+    if(a.d!==b.d)return a.d<b.d?-1:1;
     return a.g==='lesson'?-1:1;
   });
-
-  // Group by date
-  let currentDate='';
-  sorted.forEach(l=>{
+  var currentDate='';
+  sorted.forEach(function(l){
     if(l.d!==currentDate){
       currentDate=l.d;
-      const sep=document.createElement('div');
+      var sep=document.createElement('div');
       sep.className='section-label';
-      const dt=new Date(l.d+'T12:00:00');
-      const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      var dt=new Date(l.d+'T12:00:00');
+      var dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
       sep.textContent=l.d+' · '+dayNames[dt.getDay()];
       list.appendChild(sep);
     }
-
-    const card=document.createElement('div');
+    var card=document.createElement('div');
     card.className='item';
-    card.onclick=()=>openItem(l);
-
-    let tagClass='upcoming';let tagText='New';
+    card.addEventListener('click',function(){openItem(l)});
+    var tagClass='upcoming',tagText='New';
     if(l.d<todayStr){tagClass='done';tagText='Done'}
-    if(todayStr===l.d){tagClass='today';tagText='Today'}
-    const bg=l.g==='word'?'#fce4ec':'#e3f2fd';
-
-    card.innerHTML=`
-      <div class="ic" style="background:${bg}">${l.i}</div>
-      <div class="info">
-        <div class="title">${l.t}</div>
-        <div class="meta">${l.g==='word'?'Word of the Day':''}</div>
-      </div>
-      <div class="tag ${tagClass}">${tagText}</div>
-    `;
+    if(l.d===todayStr){tagClass='today';tagText='Today'}
+    var bg=l.g==='word'?'#fce4ec':'#e3f2fd';
+    card.innerHTML='<div class="ic" style="background:'+bg+'">'+l.i+'</div>\
+      <div class="info"><div class="title">'+l.t+'</div>\
+      <div class="meta">'+(l.g==='word'?'Word of the Day':'')+'</div></div>\
+      <div class="tag '+tagClass+'">'+tagText+'</div>';
     list.appendChild(card);
   });
 }
@@ -373,39 +395,72 @@ function render(){
 /* ===== OPEN ITEM ===== */
 function openItem(item){
   document.getElementById('content').classList.remove('show');
-  const d=document.getElementById('detail');
+  var d=document.getElementById('detail');
   d.classList.add('show');
-  const ifr=document.getElementById('iframe');
+  var ifr=document.getElementById('iframe');
   ifr.srcdoc='<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999"><h2>Loading...</h2></body></html>';
-  fetch(item.f).then(r=>{if(!r.ok)throw Error();return r.text()}).then(h=>{ifr.srcdoc=h}).catch(()=>{
-    ifr.srcdoc='<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999"><h2>⏳ Coming Soon</h2><p style="font-size:14px;color:#6c757d">Will be available on '+item.d+'</p></body></html>'
+  fetch(item.f).then(function(r){
+    if(!r.ok)throw Error();return r.text();
+  }).then(function(h){
+    // Inject dark mode if parent is dark
+    var isDark=document.body.classList.contains('dark');
+    if(isDark){
+      var dm='<style>body{background:#0f0f1a!important;color:#e8e8e8!important}\
+      .section{background:#1a1a2e!important}.header{border-bottom-color:#2d2d5e!important}\
+      .example-box{background:#2d1a1a!important;border-left-color:#ef5350!important}\
+      .def-box{background:#1a1a2e!important}.task-box{background:#2d1f00!important;border-color:#664300!important}\
+      .task-box .task-title{color:#ffb74d!important}\
+      .syn-box .tag{background:#1a237e!important;color:#90caf9!important}\
+      .syn-box .tag.ant{background:#4a1a1a!important;color:#ef9a9a!important}\
+      .collocation{background:#1a1a2e!important}\
+      h1,h2,h3{color:#e8e8e8!important}\
+      p,li{color:#ccc!important}\
+      .word-card,.article-box{background:#1a1a2e!important;border-color:#2d2d5e!important}\
+      .article-box h2{color:#e8e8e8!important}\
+      .word-card .example{background:#1a1a2e!important;border-color:#2d2d5e!important;color:#ccc!important}\
+      .q-item{border-bottom-color:#2d2d5e!important}\
+      .highlight{color:#ef5350!important}\
+      .meta,.source,.cn{color:#999!important}\
+      body.dark-all{background:#0f0f1a!important}</style>';
+      h=h.replace('</head>',dm+'</head>');
+    }
+    ifr.srcdoc=h;
+  }).catch(function(){
+    ifr.srcdoc='<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999"><h2>⏳ Coming Soon</h2></body></html>';
   });
 }
 
-function openFocus(){if(window._focusItem)openItem(window._focusItem)}
-function closeDetail(){document.getElementById('detail').classList.remove('show');document.getElementById('content').classList.add('show')}
+/* ===== UI ===== */
+document.getElementById('backBtn').addEventListener('click',function(){
+  document.getElementById('detail').classList.remove('show');
+  document.getElementById('content').classList.add('show');
+});
 
 /* ===== FULLSCREEN ===== */
 function goFullscreen(){
-  if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{})}
-  else{document.exitFullscreen().catch(()=>{})}
+  if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}
 }
-document.addEventListener('fullscreenchange',()=>{
-  const t=document.fullscreenElement?'✕':'⛶';
-  document.querySelectorAll('#fsBtn,#fsBtn2').forEach(b=>b.textContent=t);
+document.getElementById('fsBtn').addEventListener('click',goFullscreen);
+document.getElementById('fsBtn2').addEventListener('click',goFullscreen);
+document.addEventListener('fullscreenchange',function(){
+  var t=document.fullscreenElement?'✕':'⛶';
+  document.getElementById('fsBtn').textContent=t;
+  document.getElementById('fsBtn2').textContent=t;
 });
 
 /* ===== DARK MODE ===== */
 function toggleDark(){
   document.body.classList.toggle('dark');
-  const isDark=document.body.classList.contains('dark');
-  document.querySelectorAll('#darkBtn,#darkBtn2').forEach(b=>b.textContent=isDark?'☀️':'🌙');
+  var isDark=document.body.classList.contains('dark');
+  document.getElementById('darkBtn').textContent=isDark?'☀️':'🌙';
+  document.getElementById('darkBtn2').textContent=isDark?'☀️':'🌙';
   try{sessionStorage.setItem('ed',isDark?'1':'0')}catch(e){}
 }
-// Restore dark mode
-try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');document.querySelectorAll('#darkBtn,#darkBtn2').forEach(b=>b.textContent='☀️')}}catch(e){}
-
-/* ===== BOOT — always show login screen, no session persistence ===== */
+document.getElementById('darkBtn').addEventListener('click',toggleDark);
+document.getElementById('darkBtn2').addEventListener('click',toggleDark);
+try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');
+document.getElementById('darkBtn').textContent='☀️';
+document.getElementById('darkBtn2').textContent='☀️'}}catch(e){}
 </script>
 </body>
 </html>
