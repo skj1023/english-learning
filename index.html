@@ -171,7 +171,7 @@
 
 <script>
 /* ===== CONFIG ===== */
-const PWH = 'h494a65';
+const PWH = 'ZWNob0AyMDI2';
 
 const lessons = [
   // Week 1: Jun 28 - Jul 5
@@ -205,16 +205,10 @@ let currentWeek = '';
 let currentCat = 'all';
 let todayStr; // set in init()
 
-/* ===== PASSWORD ===== */
-// Simple hash that works on HTTP and HTTPS
-function hashPw(s){
-  let h=0;
-  for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}
-  return 'h'+Math.abs(h).toString(36);
-}
-async function login(){
+/* ===== PASSWORD — btoa works on both HTTP and HTTPS ===== */
+function login(){
   const v=document.getElementById('pw').value;
-  if(hashPw(v)===PWH){
+  if(btoa(v)===PWH){
     sessionStorage.setItem('ea','1');
     document.getElementById('login-screen').classList.add('hidden');
     init()
