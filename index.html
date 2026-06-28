@@ -164,6 +164,13 @@
     </div>
   </div>
 
+  <div id="today-focus" style="display:none;background:linear-gradient(135deg,#e3f2fd,#f3e5f5);border-radius:12px;padding:16px;margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:600;color:#1565c0;margin-bottom:4px;">🎯 Today's Focus</div>
+    <div id="focus-title" style="font-size:16px;font-weight:700;color:#1a1a2e;"></div>
+    <div id="focus-link" style="margin-top:6px;"></div>
+    <div style="margin-top:6px;font-size:13px;color:#6c757d;" id="focus-status"></div>
+  </div>
+
   <div id="lesson-list">
     <!-- Rendered by JS -->
   </div>
@@ -256,13 +263,31 @@ function renderContent() {
   document.getElementById('total-lessons').textContent = lessons.filter(l => l.type === 'lesson').length;
   document.getElementById('total-words').textContent = lessons.filter(l => l.type === 'word').length;
 
+  // Today Focus
+  const today = new Date().toISOString().split('T')[0];
+  const todayItems = lessons.filter(l => l.date === today);
+  const focusDiv = document.getElementById('today-focus');
+  if (todayItems.length > 0) {
+    const first = todayItems[0];
+    focusDiv.style.display = 'block';
+    document.getElementById('focus-title').textContent = first.title;
+    document.getElementById('focus-status').textContent = '📅 ' + today + ' · ' + first.day + (first.type === 'word' ? ' · Word of the Day' : '');
+    const linkDiv = document.getElementById('focus-link');
+    linkDiv.innerHTML = '';
+    const btn = document.createElement('button');
+    btn.textContent = '▶ Open';
+    btn.style.cssText = 'padding:6px 16px;background:#4a90d9;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;';
+    btn.onclick = () => openLesson(first);
+    linkDiv.appendChild(btn);
+  } else {
+    focusDiv.style.display = 'none';
+  }
+
   const list = document.getElementById('lesson-list');
   list.innerHTML = '';
 
   // Group by date
   const groups = {};
-  const today = new Date().toISOString().split('T')[0];
-
   lessons.forEach(l => {
     const weekStart = getWeekStart(l.date);
     if (!groups[weekStart]) groups[weekStart] = [];
