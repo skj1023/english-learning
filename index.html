@@ -3,391 +3,381 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Echo English · Lance's Learning Hub</title>
+<title>Echo English · Lance</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 16px; line-height: 1.7; color: #1a1a2e; background: #f8f9fa;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ── Login Screen ── */
-  #login-screen {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: #1a1a2e; display: flex; align-items: center; justify-content: center;
-    z-index: 9999; backdrop-filter: blur(4px);
-  }
-  #login-screen.hidden { display: none; }
-  .login-box {
-    background: #16213e; border-radius: 16px; padding: 40px 32px;
-    width: 90%; max-width: 380px; text-align: center;
-  }
-  .login-box h1 { font-size: 24px; color: #e0e0e0; margin-bottom: 4px; }
-  .login-box p { font-size: 14px; color: #6c757d; margin-bottom: 24px; }
-  .login-box input {
-    width: 100%; padding: 14px 16px; border: 1px solid #2d3436; border-radius: 10px;
-    background: #1a1a2e; color: #e0e0e0; font-size: 16px; outline: none; transition: border 0.2s;
-  }
-  .login-box input:focus { border-color: #4a90d9; }
-  .login-box button {
-    width: 100%; padding: 14px; margin-top: 12px;
-    background: #4a90d9; color: #fff; border: none; border-radius: 10px;
-    font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s;
-  }
-  .login-box button:hover { background: #357abd; }
-  .login-box .error { color: #ef5350; font-size: 13px; margin-top: 8px; display: none; }
-
-  /* ── Main Content ── */
-  #content { display: none; max-width: 720px; margin: 0 auto; padding: 20px 16px 80px; }
-  #content.show { display: block; }
-
-  .header {
-    padding: 24px 0 16px; border-bottom: 2px solid #e9ecef; margin-bottom: 20px;
-  }
-  .header h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
-  .header .sub { font-size: 13px; color: #6c757d; margin-top: 2px; }
-
-  .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-  .stat-card {
-    flex: 1; min-width: 100px; background: #fff; border-radius: 10px; padding: 14px 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06); text-align: center;
-  }
-  .stat-card .num { font-size: 24px; font-weight: 700; color: #4a90d9; }
-  .stat-card .label { font-size: 12px; color: #6c757d; margin-top: 2px; }
-
-  /* ── Lesson List ── */
-  .day-group { margin-bottom: 24px; }
-  .day-label {
-    font-size: 13px; font-weight: 600; color: #6c757d; text-transform: uppercase;
-    letter-spacing: 1px; margin-bottom: 8px;
-  }
-
-  .lesson-card {
-    background: #fff; border-radius: 10px; padding: 16px; margin-bottom: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06); cursor: pointer; transition: box-shadow 0.2s;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .lesson-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-  .lesson-card .icon {
-    width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center;
-    justify-content: center; font-size: 18px; flex-shrink: 0;
-  }
-  .lesson-card .info { flex: 1; }
-  .lesson-card .title { font-size: 15px; font-weight: 600; color: #1a1a2e; }
-  .lesson-card .meta { font-size: 12px; color: #6c757d; margin-top: 2px; }
-  .lesson-card .status {
-    font-size: 11px; padding: 2px 8px; border-radius: 8px; font-weight: 600;
-  }
-  .status.done { background: #e8f5e9; color: #2e7d32; }
-  .status.pending { background: #fff3e0; color: #e65100; }
-  .status.new { background: #e3f2fd; color: #1565c0; }
-
-  /* ── Lesson Detail View ── */
-  #lesson-detail {
-    display: none; max-width: 720px; margin: 0 auto; padding: 20px 16px 80px;
-  }
-  #lesson-detail.show { display: block; }
-  .back-btn {
-    display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
-    background: #fff; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer;
-    font-size: 14px; color: #495057; margin-bottom: 16px; transition: background 0.2s;
-  }
-  .back-btn:hover { background: #f8f9fa; }
-
-  .lesson-frame {
-    width: 100%; border: 1px solid #e9ecef; border-radius: 12px; overflow: hidden;
-    background: #fff; min-height: 400px;
-  }
-  .lesson-frame iframe {
-    width: 100%; height: 100vh; border: none; display: block;
-  }
-
-  /* ── Footer ── */
-  .footer { text-align: center; padding: 20px 0; font-size: 12px; color: #adb5bd; }
-
-  /* ── Responsive ── */
-  @media (max-width: 480px) {
-    #content { padding: 12px 12px 60px; }
-    .header h1 { font-size: 20px; }
-    .stat-card .num { font-size: 20px; }
-  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.6;color:#1a1a2e;background:#f8f9fa;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 
   /* ── Dark Mode ── */
-  @media (prefers-color-scheme: dark) {
-    body { background: #1a1a2e; color: #e0e0e0; }
-    .stat-card { background: #16213e; }
-    .stat-card .num { color: #6cb4ee; }
-    .lesson-card { background: #16213e; }
-    .lesson-card .title { color: #e0e0e0; }
-    .header { border-bottom-color: #2d3436; }
-    .header h1 { color: #e0e0e0; }
-    .back-btn { background: #16213e; border-color: #2d3436; color: #adb5bd; }
-    .back-btn:hover { background: #1a1a2e; }
-    .lesson-frame { border-color: #2d3436; background: #16213e; }
+  body.dark{background:#0f0f1a;color:#e0e0e0}
+  body.dark .card{background:#16213e;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+  body.dark .stat{background:#16213e}
+  body.dark .tab-btn{color:#6c757d}
+  body.dark .tab-btn.active{color:#6cb4ee;border-bottom-color:#6cb4ee}
+  body.dark .cat-btn{color:#6c757d;background:#1a1a2e}
+  body.dark .cat-btn.active{background:#16213e;color:#6cb4ee}
+  body.dark .week-btn{color:#6c757d}
+  body.dark .week-btn.active{color:#6cb4ee}
+  body.dark .item{background:#1a1a2e}
+  body.dark .item .title{color:#e0e0e0}
+  body.dark .item .meta{color:#888}
+  body.dark .focus-card{background:linear-gradient(135deg,#1a237e,#311b92) !important}
+  body.dark .toolbar-btn{background:#1a1a2e;color:#adb5bd;border-color:#2d3436}
+  body.dark .login-box{background:#16213e}
+  body.dark .login-box input{background:#1a1a2e;border-color:#2d3436;color:#e0e0e0}
+  body.dark .login-box h1{color:#e0e0e0}
+  body.dark .back-btn{background:#1a1a2e;border-color:#2d3436;color:#adb5bd}
+  body.dark .lesson-frame{border-color:#2d3436;background:#16213e}
+  body.dark .footer{color:#444}
+
+  /* ── Login ── */
+  #login-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:#0f0f1a;display:flex;align-items:center;justify-content:center;z-index:9999}
+  #login-screen.hidden{display:none}
+  .login-box{background:#16213e;border-radius:16px;padding:36px 28px;width:88%;max-width:360px;text-align:center}
+  .login-box h1{font-size:22px;color:#e0e0e0;margin-bottom:4px}
+  .login-box p{font-size:14px;color:#888;margin-bottom:20px}
+  .login-box input{width:100%;padding:14px;border:1px solid #2d3436;border-radius:10px;background:#0f0f1a;color:#e0e0e0;font-size:16px;outline:none}
+  .login-box input:focus{border-color:#6cb4ee}
+  .login-box button{width:100%;padding:14px;margin-top:10px;background:#4a90d9;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
+  .login-box .error{color:#ef5350;font-size:13px;margin-top:8px;display:none}
+
+  /* ── Layout ── */
+  #content{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
+  #content.show{display:block}
+
+  .top-bar{position:sticky;top:0;z-index:100;background:#f8f9fa;padding:16px 16px 0;transition:background .3s}
+  body.dark .top-bar{background:#0f0f1a}
+
+  /* ── Toolbar ── */
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .toolbar h1{font-size:20px;font-weight:700}
+  .toolbar-actions{display:flex;gap:6px}
+  .toolbar-btn{width:36px;height:36px;border-radius:8px;border:1px solid #e9ecef;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s}
+
+  /* ── Week Tabs ── */
+  .week-tabs{display:flex;gap:0;overflow-x:auto;padding:4px 0 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .week-tabs::-webkit-scrollbar{display:none}
+  .week-btn{flex-shrink:0;padding:8px 14px;font-size:13px;font-weight:600;color:#6c757d;background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+  .week-btn.active{color:#1a1a2e;border-bottom-color:#4a90d9}
+
+  /* ── Category Tabs ── */
+  .cat-tabs{display:flex;gap:8px;margin:0 0 12px}
+  .cat-btn{padding:6px 16px;border-radius:16px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:#e9ecef;color:#495057;transition:all .2s}
+  .cat-btn.active{background:#4a90d9;color:#fff}
+
+  /* ── Focus Card ── */
+  .focus-card{display:none;background:linear-gradient(135deg,#e3f2fd,#f3e5f5);border-radius:12px;padding:14px 16px;margin:0 0 14px}
+  .focus-card.show{display:flex;align-items:center;gap:12px}
+  .focus-card .fi{flex:1}
+  .focus-card .fi-t{font-size:14px;font-weight:600;color:#1a1a2e}
+  .focus-card .fi-s{font-size:12px;color:#6c757d;margin-top:2px}
+  .focus-card .fi-b{padding:7px 16px;background:#4a90d9;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0}
+
+  /* ── Items ── */
+  .section-label{font-size:12px;font-weight:600;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin:0 0 8px}
+  .item{background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:6px;box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer;display:flex;align-items:center;gap:10px;transition:box-shadow .2s}
+  .item:active{box-shadow:0 1px 6px rgba(0,0,0,.1)}
+  .item .ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .item .info{flex:1;min-width:0}
+  .item .title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .item .meta{font-size:11px;color:#6c757d;margin-top:1px}
+  .item .tag{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600;flex-shrink:0}
+  .tag.today{background:#fff3e0;color:#e65100}
+  .tag.done{background:#e8f5e9;color:#2e7d32}
+  .tag.upcoming{background:#e3f2fd;color:#1565c0}
+  .tag.word{background:#fce4ec;color:#c62828;font-size:9px}
+
+  /* ── Detail ── */
+  #detail{display:none;max-width:640px;margin:0 auto;padding:12px 16px 60px}
+  #detail.show{display:block}
+  .back-btn{display:inline-flex;align-items:center;gap:4px;padding:7px 12px;background:#fff;border:1px solid #e9ecef;border-radius:8px;cursor:pointer;font-size:13px;color:#495057;margin-bottom:12px}
+  .lesson-frame{border:1px solid #e9ecef;border-radius:12px;overflow:hidden;background:#fff}
+  .lesson-frame iframe{width:100%;height:100dvh;border:none;display:block}
+
+  /* ── Empty State ── */
+  .empty{padding:40px 20px;text-align:center;color:#adb5bd;font-size:14px;line-height:1.8}
+  .empty .big{font-size:36px;margin-bottom:8px}
+
+  /* ── Footer ── */
+  .footer{text-align:center;padding:24px 0;font-size:11px;color:#adb5bd}
+
+  @media(max-width:480px){
+    .toolbar h1{font-size:18px}
+    .week-btn{padding:6px 10px;font-size:12px}
+    .top-bar{padding:12px 12px 0}
+    #content{padding:0 0 40px}
+    .item{padding:10px 12px}
+    .item .title{font-size:13px}
   }
 </style>
 </head>
 <body>
 
-<!-- ──────── LOGIN SCREEN ──────── -->
+<!-- Login -->
 <div id="login-screen">
   <div class="login-box">
     <h1>🔐 Echo English</h1>
     <p>Lance's Learning Hub</p>
-    <input type="password" id="password-input" placeholder="Enter password" autofocus
-           onkeydown="if(event.key==='Enter')checkPassword()">
-    <button onclick="checkPassword()">Unlock</button>
-    <div class="error" id="login-error">Incorrect password</div>
+    <input type="password" id="pw" placeholder="Enter password" autofocus onkeydown="if(event.key==='Enter')login()">
+    <button onclick="login()">Unlock</button>
+    <div class="error" id="login-err">Incorrect password</div>
   </div>
 </div>
 
-<!-- ──────── MAIN CONTENT (Lesson List) ──────── -->
+<!-- Main -->
 <div id="content">
-  <div class="header">
-    <h1>📚 Echo English</h1>
-    <div class="sub">Lance's Personal Learning Hub · Updated daily</div>
+  <div class="top-bar">
+    <div class="toolbar">
+      <h1>📚 Echo</h1>
+      <div class="toolbar-actions">
+        <button class="toolbar-btn" onclick="toggleDark()" id="darkBtn" title="Dark mode">🌙</button>
+        <button class="toolbar-btn" onclick="goFullscreen()" id="fsBtn" title="Fullscreen">⛶</button>
+      </div>
+    </div>
+    <div class="week-tabs" id="weekTabs"></div>
+    <div class="cat-tabs" id="catTabs" style="margin-top:8px"></div>
   </div>
 
-  <div class="stats">
-    <div class="stat-card">
-      <div class="num" id="total-lessons">0</div>
-      <div class="label">Lessons</div>
+  <!-- Focus Card -->
+  <div class="focus-card" id="focusCard">
+    <div class="fi">
+      <div class="fi-t" id="focusTitle"></div>
+      <div class="fi-s" id="focusMeta"></div>
     </div>
-    <div class="stat-card">
-      <div class="num" id="total-words">0</div>
-      <div class="label">Words</div>
-    </div>
-    <div class="stat-card">
-      <div class="num" id="streak-days">—</div>
-      <div class="label">Week</div>
-    </div>
+    <button class="fi-b" onclick="openFocus()">▶ Open</button>
   </div>
 
-  <div id="today-focus" style="display:none;background:linear-gradient(135deg,#e3f2fd,#f3e5f5);border-radius:12px;padding:16px;margin-bottom:16px;">
-    <div style="font-size:13px;font-weight:600;color:#1565c0;margin-bottom:4px;">🎯 Today's Focus</div>
-    <div id="focus-title" style="font-size:16px;font-weight:700;color:#1a1a2e;"></div>
-    <div id="focus-link" style="margin-top:6px;"></div>
-    <div style="margin-top:6px;font-size:13px;color:#6c757d;" id="focus-status"></div>
-  </div>
-
-  <div id="lesson-list">
-    <!-- Rendered by JS -->
-  </div>
-  <div class="footer">Echo · Your personal English coach</div>
+  <!-- List -->
+  <div id="itemList"></div>
+  <div class="footer">Echo · daily</div>
 </div>
 
-<!-- ──────── LESSON DETAIL VIEW ──────── -->
-<div id="lesson-detail">
-  <button class="back-btn" onclick="showList()">← Back to list</button>
-  <div class="lesson-frame" id="lesson-frame">
-    <iframe id="lesson-iframe" srcdoc=""></iframe>
-  </div>
+<!-- Detail -->
+<div id="detail">
+  <button class="back-btn" onclick="closeDetail()">← Back</button>
+  <div class="lesson-frame"><iframe id="iframe" srcdoc=""></iframe></div>
 </div>
 
 <script>
-/* ==========================================================
-   CONFIGURATION
-   ========================================================== */
+/* ===== CONFIG ===== */
+const PWH = 'b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f346584520e0c';
 
-// 🔑 PASSWORD — SHA-256 hash of the actual password
-// Current password: echo@2026 (you can change the hash below)
-// To set a new password, run: echo -n "newpassword" | sha256sum
-// Then replace the hash below.
-const PASSWORD_HASH = 'b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f346584520e0c';
-
-// 📚 LESSONS DATA — add new entries here
 const lessons = [
-  // ─── Week 1: Jun 28 - Jul 5 ───
-  { date:'2026-06-28', day:'Sun', title:'leverage', icon:'💡', type:'word', file:'lessons/2026-06-28_wotd_leverage.html' },
-  { date:'2026-06-29', day:'Mon', title:'职场表达 · SA自我介绍', icon:'🏢', type:'lesson', file:'lessons/2026-06-29_monday_workplace.html' },
-  { date:'2026-06-29', day:'Mon', title:'tailor', icon:'💡', type:'word', file:'lessons/2026-06-29_wotd_tailor.html' },
-  { date:'2026-06-30', day:'Tue', title:'阅读训练 · AI文章', icon:'📖', type:'lesson', file:'lessons/2026-06-30_tuesday_reading.html' },
-  { date:'2026-06-30', day:'Tue', title:'identify', icon:'💡', type:'word', file:'lessons/2026-06-30_wotd_identify.html' },
-  { date:'2026-07-01', day:'Wed', title:'口语场景 · 向客户介绍AI', icon:'🎤', type:'lesson', file:'lessons/2026-07-01_wednesday_speaking.html' },
-  { date:'2026-07-01', day:'Wed', title:'enable', icon:'💡', type:'word', file:'lessons/2026-07-01_wotd_enable.html' },
-  { date:'2026-07-02', day:'Thu', title:'词汇升级 · 5组动词升级', icon:'🔥', type:'lesson', file:'lessons/2026-07-02_thursday_vocab.html' },
-  { date:'2026-07-02', day:'Thu', title:'implement', icon:'💡', type:'word', file:'lessons/2026-07-02_wotd_implement.html' },
-  { date:'2026-07-03', day:'Fri', title:'听力训练 · TED影子跟读', icon:'🎬', type:'lesson', file:'lessons/2026-07-03_friday_listening.html' },
-  { date:'2026-07-03', day:'Fri', title:'optimize', icon:'💡', type:'word', file:'lessons/2026-07-03_wotd_optimize.html' },
-  { date:'2026-07-04', day:'Sat', title:'align', icon:'💡', type:'word', file:'lessons/2026-07-04_wotd_align.html' },
-  { date:'2026-07-05', day:'Sun', title:'streamline', icon:'💡', type:'word', file:'lessons/2026-07-05_wotd_streamline.html' },
-  { date:'2026-07-05', day:'Sun', title:'外教课准备包', icon:'🎯', type:'lesson', file:'lessons/2026-07-05_sunday_class_prep.html' },
+  // Week 1: Jun 28 - Jul 5
+  {d:'2026-06-28',w:'Mon',t:'leverage',i:'💡',g:'word',f:'lessons/2026-06-28_wotd_leverage.html'},
+  {d:'2026-06-29',w:'Mon',t:'职场表达 · SA自我介绍',i:'🏢',g:'lesson',f:'lessons/2026-06-29_monday_workplace.html'},
+  {d:'2026-06-29',w:'Mon',t:'tailor',i:'💡',g:'word',f:'lessons/2026-06-29_wotd_tailor.html'},
+  {d:'2026-06-30',w:'Tue',t:'阅读训练 · AI文章',i:'📖',g:'lesson',f:'lessons/2026-06-30_tuesday_reading.html'},
+  {d:'2026-06-30',w:'Tue',t:'identify',i:'💡',g:'word',f:'lessons/2026-06-30_wotd_identify.html'},
+  {d:'2026-07-01',w:'Wed',t:'口语场景 · 向客户介绍AI',i:'🎤',g:'lesson',f:'lessons/2026-07-01_wednesday_speaking.html'},
+  {d:'2026-07-01',w:'Wed',t:'enable',i:'💡',g:'word',f:'lessons/2026-07-01_wotd_enable.html'},
+  {d:'2026-07-02',w:'Thu',t:'词汇升级 · 5组动词升级',i:'🔥',g:'lesson',f:'lessons/2026-07-02_thursday_vocab.html'},
+  {d:'2026-07-02',w:'Thu',t:'implement',i:'💡',g:'word',f:'lessons/2026-07-02_wotd_implement.html'},
+  {d:'2026-07-03',w:'Fri',t:'听力训练 · TED影子跟读',i:'🎬',g:'lesson',f:'lessons/2026-07-03_friday_listening.html'},
+  {d:'2026-07-03',w:'Fri',t:'optimize',i:'💡',g:'word',f:'lessons/2026-07-03_wotd_optimize.html'},
+  {d:'2026-07-04',w:'Sat',t:'align',i:'💡',g:'word',f:'lessons/2026-07-04_wotd_align.html'},
+  {d:'2026-07-05',w:'Sun',t:'streamline',i:'💡',g:'word',f:'lessons/2026-07-05_wotd_streamline.html'},
+  {d:'2026-07-05',w:'Sun',t:'外教课准备包',i:'🎯',g:'lesson',f:'lessons/2026-07-05_sunday_class_prep.html'},
 
-  // ─── Week 2: Jul 6 - Jul 12 (content ready by Sun 7/5) ───
-  { date:'2026-07-06', day:'Mon', title:'职场表达 · Pitching AI', icon:'🏢', type:'lesson', file:'lessons/2026-07-06_职场表达_pitching_ai_solutions_to_.html' },
-  { date:'2026-07-06', day:'Mon', title:'negotiate', icon:'💡', type:'word', file:'lessons/2026-07-06_wotd_negotiate.html' },
-  { date:'2026-07-07', day:'Tue', title:'阅读训练 · AI in Enterprise', icon:'📖', type:'lesson', file:'lessons/2026-07-07_阅读训练_ai_in_enterprise.html' },
-  { date:'2026-07-07', day:'Tue', title:'automate', icon:'💡', type:'word', file:'lessons/2026-07-07_wotd_automate.html' },
-  { date:'2026-07-08', day:'Wed', title:'口语场景 · 应对客户异议', icon:'🎤', type:'lesson', file:'lessons/2026-07-08_口语场景_handling_client_objection.html' },
-  { date:'2026-07-08', day:'Wed', title:'demonstrate', icon:'💡', type:'word', file:'lessons/2026-07-08_wotd_demonstrate.html' },
-  { date:'2026-07-09', day:'Thu', title:'词汇升级 · Business Adjectives', icon:'🔥', type:'lesson', file:'lessons/2026-07-09_词汇升级_business_adjectives.html' },
-  { date:'2026-07-09', day:'Thu', title:'evaluate', icon:'💡', type:'word', file:'lessons/2026-07-09_wotd_evaluate.html' },
-  { date:'2026-07-10', day:'Fri', title:'听力训练 · 电影场景', icon:'🎬', type:'lesson', file:'lessons/2026-07-10_听力训练_movie_scene.html' },
-  { date:'2026-07-10', day:'Fri', title:'collaborate', icon:'💡', type:'word', file:'lessons/2026-07-10_wotd_collaborate.html' },
-  { date:'2026-07-11', day:'Sat', title:'integrate', icon:'💡', type:'word', file:'lessons/2026-07-11_wotd_integrate.html' },
-  { date:'2026-07-12', day:'Sun', title:'adopt', icon:'💡', type:'word', file:'lessons/2026-07-12_wotd_adopt.html' },
-  { date:'2026-07-12', day:'Sun', title:'外教课准备包', icon:'🎯', type:'lesson', file:'lessons/2026-07-12_外教课准备_本周主题.html' }
+  // Week 2: Jul 6 - 12 (words only, lessons ready by Sun 7/5)
+  {d:'2026-07-06',w:'Mon',t:'negotiate',i:'💡',g:'word',f:'lessons/2026-07-06_wotd_negotiate.html'},
+  {d:'2026-07-07',w:'Tue',t:'automate',i:'💡',g:'word',f:'lessons/2026-07-07_wotd_automate.html'},
+  {d:'2026-07-08',w:'Wed',t:'demonstrate',i:'💡',g:'word',f:'lessons/2026-07-08_wotd_demonstrate.html'},
+  {d:'2026-07-09',w:'Thu',t:'evaluate',i:'💡',g:'word',f:'lessons/2026-07-09_wotd_evaluate.html'},
+  {d:'2026-07-10',w:'Fri',t:'collaborate',i:'💡',g:'word',f:'lessons/2026-07-10_wotd_collaborate.html'},
+  {d:'2026-07-11',w:'Sat',t:'integrate',i:'💡',g:'word',f:'lessons/2026-07-11_wotd_integrate.html'},
+  {d:'2026-07-12',w:'Sun',t:'adopt',i:'💡',g:'word',f:'lessons/2026-07-12_wotd_adopt.html'}
 ];
 
-/* ==========================================================
-   PASSWORD AUTH
-   ========================================================== */
+/* ===== STATE ===== */
+let currentWeek = '';
+let currentCat = 'all';
+let todayStr; // set in init()
 
-async function sha256(str) {
-  const buf = new TextEncoder().encode(str);
-  const hash = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
+/* ===== PASSWORD ===== */
+async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function login(){const v=document.getElementById('pw').value;if(await sha256(v)===PWH){sessionStorage.setItem('ea','1');document.getElementById('login-screen').classList.add('hidden');init()}else{document.getElementById('login-err').style.display='block';document.getElementById('pw').value='';document.getElementById('pw').focus()}}
 
-async function checkPassword() {
-  const input = document.getElementById('password-input');
-  const hash = await sha256(input.value);
-  if (hash === PASSWORD_HASH) {
-    sessionStorage.setItem('echo_auth', '1');
-    document.getElementById('login-screen').classList.add('hidden');
-    renderContent();
-  } else {
-    document.getElementById('login-error').style.display = 'block';
-    input.value = '';
-    input.focus();
-  }
-}
-
-/* ==========================================================
-   RENDER
-   ========================================================== */
-
-function renderContent() {
+/* ===== INIT ===== */
+function init(){
   document.getElementById('content').classList.add('show');
-  document.getElementById('total-lessons').textContent = lessons.filter(l => l.type === 'lesson').length;
-  document.getElementById('total-words').textContent = lessons.filter(l => l.type === 'word').length;
+  todayStr=new Date().toISOString().slice(0,10);
+  buildWeeks();
+  restoreState();
+  render();
+}
 
-  // Today Focus
-  const today = new Date().toISOString().split('T')[0];
-  const todayItems = lessons.filter(l => l.date === today);
-  const focusDiv = document.getElementById('today-focus');
-  if (todayItems.length > 0) {
-    const first = todayItems[0];
-    focusDiv.style.display = 'block';
-    document.getElementById('focus-title').textContent = first.title;
-    document.getElementById('focus-status').textContent = '📅 ' + today + ' · ' + first.day + (first.type === 'word' ? ' · Word of the Day' : '');
-    const linkDiv = document.getElementById('focus-link');
-    linkDiv.innerHTML = '';
-    const btn = document.createElement('button');
-    btn.textContent = '▶ Open';
-    btn.style.cssText = 'padding:6px 16px;background:#4a90d9;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;';
-    btn.onclick = () => openLesson(first);
-    linkDiv.appendChild(btn);
-  } else {
-    focusDiv.style.display = 'none';
+function getWeekStart(d){const dt=new Date(d);const day=dt.getDay();const diff=dt.getDate()-day+(day===0?-6:1);dt.setDate(diff);return dt.toISOString().slice(0,10)}
+function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10)}
+
+/* ===== BUILD WEEKS ===== */
+function buildWeeks(){
+  const groups={};
+  lessons.forEach(l=>{const ws=getWeekStart(l.d);if(!groups[ws])groups[ws]=[];groups[ws].push(l)});
+  const keys=Object.keys(groups).sort();
+  const tabs=document.getElementById('weekTabs');
+  tabs.innerHTML='';
+
+  // Find current week
+  const todayStr2=new Date().toISOString().slice(0,10);
+  let found=false;
+  keys.forEach(k=>{
+    const end=addDays(k,6);
+    const btn=document.createElement('button');
+    btn.className='week-btn';
+    btn.textContent=`${k.slice(5)}-${end.slice(5)}`;
+    btn.dataset.week=k;
+    btn.onclick=()=>switchWeek(k);
+    tabs.appendChild(btn);
+    if(todayStr2>=k&&todayStr2<=end&&!found){currentWeek=k;found=true}}
+  });
+  if(!currentWeek&&keys.length>0)currentWeek=keys[keys.length-1];
+
+  // Category tabs (inside top bar after week tabs)
+  const ct=document.getElementById('catTabs');
+  ct.innerHTML='';
+  ['all','lessons','words'].forEach(c=>{
+    const b=document.createElement('button');
+    b.className='cat-btn'+(c===currentCat?' active':'');
+    b.textContent=c==='all'?'All':c==='lessons'?'📖 Lessons':'💡 Words';
+    b.onclick=()=>switchCat(c);
+    ct.appendChild(b);
+  });
+}
+
+/* ===== SWITCH ===== */
+function switchWeek(w){
+  currentWeek=w;
+  saveState();
+  render();
+  document.querySelectorAll('.week-btn').forEach(b=>b.classList.toggle('active',b.dataset.week===w));
+}
+function switchCat(c){
+  currentCat=c;
+  saveState();
+  render();
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.toggle('active',b.textContent.includes(c==='all'?'All':c==='lessons'?'Lessons':'Words')));
+}
+
+function saveState(){
+  try{sessionStorage.setItem('ew',currentWeek);sessionStorage.setItem('ec',currentCat)}catch(e){}
+}
+function restoreState(){
+  try{
+    const w=sessionStorage.getItem('ew');if(w)currentWeek=w;
+    const c=sessionStorage.getItem('ec');if(c)currentCat=c;
+  }catch(e){}
+}
+
+/* ===== RENDER ===== */
+function render(){
+  const end=addDays(currentWeek,6);
+  let items=lessons.filter(l=>l.d>=currentWeek&&l.d<=end);
+  if(currentCat==='lessons'){items=items.filter(l=>l.g==='lesson')}
+  else if(currentCat==='words'){items=items.filter(l=>l.g==='word')}
+
+  // Update tab highlights
+  document.querySelectorAll('.week-btn').forEach(b=>b.classList.toggle('active',b.dataset.week===currentWeek));
+  document.querySelectorAll('.cat-btn').forEach(b=>{
+    const c=b.textContent.includes('All')?'all':b.textContent.includes('Lessons')?'lessons':'words';
+    b.classList.toggle('active',c===currentCat);
+  });
+
+  // Focus card
+  const fc=document.getElementById('focusCard');
+  const todayItems=items.filter(l=>l.d===todayStr);
+  if(todayItems.length>0){
+    fc.classList.add('show');
+    document.getElementById('focusTitle').textContent=todayItems[0].t;
+    document.getElementById('focusMeta').textContent=todayStr+' · '+todayItems[0].w+(todayItems[0].g==='word'?' · Word':'');
+    window._focusItem=todayItems[0];
+  }else{fc.classList.remove('show')}
+
+  // List
+  const list=document.getElementById('itemList');
+  list.innerHTML='';
+
+  if(items.length===0){
+    list.innerHTML='<div class="empty"><div class="big">📭</div>No content yet<br>Content will be ready by Sunday evening</div>';
+    return;
   }
 
-  const list = document.getElementById('lesson-list');
-  list.innerHTML = '';
+  // Sort by date, then by type (lesson first, then word)
+  const sorted=[...items].sort((a,b)=>{
+    if(a.d!==b.d)return a.d.localeCompare(b.d);
+    return a.g==='lesson'?-1:1;
+  });
 
   // Group by date
-  const groups = {};
-  lessons.forEach(l => {
-    const weekStart = getWeekStart(l.date);
-    if (!groups[weekStart]) groups[weekStart] = [];
-    groups[weekStart].push(l);
-  });
+  let currentDate='';
+  sorted.forEach(l=>{
+    if(l.d!==currentDate){
+      currentDate=l.d;
+      const sep=document.createElement('div');
+      sep.className='section-label';
+      const dt=new Date(l.d+'T12:00:00');
+      const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      sep.textContent=l.d+' · '+dayNames[dt.getDay()];
+      list.appendChild(sep);
+    }
 
-  Object.keys(groups).sort().reverse().forEach(week => {
-    const groupDiv = document.createElement('div');
-    groupDiv.className = 'day-group';
+    const card=document.createElement('div');
+    card.className='item';
+    card.onclick=()=>openItem(l);
 
-    const label = document.createElement('div');
-    label.className = 'day-label';
-    const weekEnd = addDays(week, 6);
-    label.textContent = `${week} ~ ${weekEnd}`;
-    groupDiv.appendChild(label);
+    let tagClass='upcoming';let tagText='New';
+    if(l.d<todayStr){tagClass='done';tagText='Done'}
+    if(todayStr===l.d){tagClass='today';tagText='Today'}
+    const bg=l.g==='word'?'#fce4ec':'#e3f2fd';
 
-    groups[week].sort((a, b) => a.date.localeCompare(b.date)).forEach(l => {
-      const card = document.createElement('div');
-      card.className = 'lesson-card';
-      card.onclick = () => openLesson(l);
-
-      let statusClass = 'new';
-      let statusText = 'New';
-      if (l.date < today) { statusClass = 'done'; statusText = 'Done'; }
-      if (l.date === today) { statusClass = 'pending'; statusText = 'Today'; }
-
-      const iconBg = l.type === 'word' ? '#fff3e0' : '#e3f2fd';
-
-      card.innerHTML = `
-        <div class="icon" style="background:${iconBg}">${l.icon}</div>
-        <div class="info">
-          <div class="title">${l.title}</div>
-          <div class="meta">${l.date} · ${l.day}${l.type === 'word' ? ' · Word of the Day' : ''}</div>
-        </div>
-        <div class="status ${statusClass}">${statusText}</div>
-      `;
-      groupDiv.appendChild(card);
-    });
-
-    list.appendChild(groupDiv);
+    card.innerHTML=`
+      <div class="ic" style="background:${bg}">${l.i}</div>
+      <div class="info">
+        <div class="title">${l.t}</div>
+        <div class="meta">${l.g==='word'?'Word of the Day':''}</div>
+      </div>
+      <div class="tag ${tagClass}">${tagText}</div>
+    `;
+    list.appendChild(card);
   });
 }
 
-function getWeekStart(dateStr) {
-  const d = new Date(dateStr);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
-  return d.toISOString().split('T')[0];
-}
-
-function addDays(dateStr, days) {
-  const d = new Date(dateStr);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().split('T')[0];
-}
-
-function openLesson(lesson) {
+/* ===== OPEN ITEM ===== */
+function openItem(item){
   document.getElementById('content').classList.remove('show');
-  const detail = document.getElementById('lesson-detail');
-  detail.classList.add('show');
-  const iframe = document.getElementById('lesson-iframe');
-  iframe.srcdoc = `<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999;">
-    <h2>Loading...</h2>
-    <p style="font-size:14px;">${lesson.title}</p>
-  </body></html>`;
-
-  // Fetch the lesson HTML file
-  fetch(lesson.file)
-    .then(r => {
-      if (!r.ok) throw new Error('Not found');
-      return r.text();
-    })
-    .then(html => {
-      iframe.srcdoc = html;
-    })
-    .catch(() => {
-      iframe.srcdoc = `<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999;">
-        <h2>⏳ Coming Soon</h2>
-        <p style="font-size:14px;">${lesson.title}</p>
-        <p style="font-size:13px;">This lesson will be available on ${lesson.date}</p>
-      </body></html>`;
-    });
+  const d=document.getElementById('detail');
+  d.classList.add('show');
+  const ifr=document.getElementById('iframe');
+  ifr.srcdoc='<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999"><h2>Loading...</h2></body></html>';
+  fetch(item.f).then(r=>{if(!r.ok)throw Error();return r.text()}).then(h=>{ifr.srcdoc=h}).catch(()=>{
+    ifr.srcdoc='<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999"><h2>⏳ Coming Soon</h2><p style="font-size:14px;color:#6c757d">Will be available on '+item.d+'</p></body></html>'
+  });
 }
 
-function showList() {
-  document.getElementById('lesson-detail').classList.remove('show');
-  document.getElementById('content').classList.add('show');
-}
+function openFocus(){if(window._focusItem)openItem(window._focusItem)}
+function closeDetail(){document.getElementById('detail').classList.remove('show');document.getElementById('content').classList.add('show')}
 
-/* ==========================================================
-   INIT — check session
-   ========================================================== */
-
-if (sessionStorage.getItem('echo_auth') === '1') {
-  document.getElementById('login-screen').classList.add('hidden');
-  renderContent();
-} else {
-  document.getElementById('login-screen').classList.remove('hidden');
+/* ===== FULLSCREEN ===== */
+function goFullscreen(){
+  if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{})}
+  else{document.exitFullscreen().catch(()=>{})}
 }
+document.addEventListener('fullscreenchange',()=>{
+  document.getElementById('fsBtn').textContent=document.fullscreenElement?'✕':'⛶';
+});
+
+/* ===== DARK MODE ===== */
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const isDark=document.body.classList.contains('dark');
+  document.getElementById('darkBtn').textContent=isDark?'☀️':'🌙';
+  try{sessionStorage.setItem('ed',isDark?'1':'0')}catch(e){}
+}
+// Restore dark mode
+try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');document.getElementById('darkBtn').textContent='☀️'}}catch(e){}
+
+/* ===== BOOT ===== */
+if(sessionStorage.getItem('ea')==='1'){document.getElementById('login-screen').classList.add('hidden');init()}
 </script>
 </body>
 </html>
