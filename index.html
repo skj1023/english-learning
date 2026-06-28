@@ -126,6 +126,39 @@
   .empty .big{font-size:36px;margin-bottom:8px}
   .footer{text-align:center;padding:24px 0;font-size:11px;color:#ccc}
 
+  /* ── Vocab Book ── */
+  #vocabView{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
+  #vocabView.show{display:block}
+  .vocab-top{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#fff;position:sticky;top:0;z-index:100;transition:background .3s}
+  .vocab-top h2{font-size:18px;font-weight:700;flex:1}
+  .vb-btn{padding:6px 12px;font-size:12px;font-weight:600;background:none;border:1px solid #e0e0e0;border-radius:6px;cursor:pointer;color:#666;flex-shrink:0;display:flex;align-items:center;gap:4px;white-space:nowrap}
+  .vocab-vt{display:flex;gap:8px;padding:0 16px 10px}
+  .vocab-vt button{padding:5px 14px;border-radius:14px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:#e8e8e8;color:#666}
+  .vocab-vt button.active{background:#4a90d9;color:#fff}
+  .vocab-sort{display:flex;gap:6px;padding:0 16px 10px}
+  .vocab-sort button{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid #e0e0e0;cursor:pointer;background:#fff;color:#999}
+  .vocab-sort button.active{background:#4a90d9;color:#fff;border-color:#4a90d9}
+  .vocab-card{background:#fff;border-radius:10px;padding:12px 14px;margin:0 16px 6px;border:1px solid #f0f0f0;cursor:pointer;display:flex;align-items:center;gap:10px}
+  .vocab-card .vw{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .vocab-card .vi{flex:1;min-width:0}
+  .vocab-card .vt{font-size:14px;font-weight:600}
+  .vocab-card .vm{font-size:11px;color:#999;margin-top:1px}
+  .vocab-card .vs{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600;flex-shrink:0}
+  .vocab-card .vs.lern{background:#fff3e0;color:#e65100}
+  .vocab-card .vs.mast{background:#e8f5e9;color:#2e7d32}
+  .vocab-empty{padding:40px 20px;text-align:center;color:#bbb;font-size:14px;line-height:1.8}
+  .vocab-empty .big{font-size:36px;margin-bottom:8px}
+  body.dark .vocab-top{background:#0f0f1a}
+  body.dark .vb-btn{background:#1a1a2e;border-color:#2d2d5e;color:#999}
+  body.dark .vocab-vt button{background:#1a1a2e;color:#999}
+  body.dark .vocab-vt button.active{background:#2d5a9e;color:#fff}
+  body.dark .vocab-sort button{background:#1a1a2e;border-color:#2d2d5e;color:#666}
+  body.dark .vocab-sort button.active{background:#2d5a9e;border-color:#2d5a9e;color:#fff}
+  body.dark .vocab-card{background:#1a1a2e;border-color:#2d2d5e}
+  body.dark .vocab-card .vm{color:#999}
+  body.dark .vocab-card .vs.lern{background:#4a2a0a;color:#ffb74d}
+  body.dark .vocab-card .vs.mast{background:#1a3a1a;color:#81c784}
+
   @media(max-width:480px){
     .toolbar h1{font-size:18px}
     .week-btn{padding:6px 10px;font-size:12px}
@@ -160,6 +193,7 @@
       </div>
     </div>
     <div class="week-tabs" id="weekTabs"></div>
+    <button class="vb-btn" id="vocabBtn" style="margin:4px 0 0 16px;padding:5px 12px;font-size:12px">📕 生词本</button>
     <div class="cat-tabs" id="catTabs" style="margin-top:6px"></div>
   </div>
 
@@ -200,6 +234,23 @@
   <div class="lesson-frame"><iframe id="iframe"></iframe></div>
 </div>
 
+<div id="vocabView">
+  <div class="vocab-top">
+    <button class="vb-btn" id="vbBack">← Home</button>
+    <h2>📕 Vocab Book</h2>
+    <button class="toolbar-btn" id="darkBtn3" title="Dark mode">🌙</button>
+  </div>
+  <div class="vocab-vt" id="vocabTabs">
+    <button class="active" data-vt="lern">🔴 Learning</button>
+    <button data-vt="mast">✅ Mastered</button>
+  </div>
+  <div class="vocab-sort" id="vocabSort">
+    <button data-vs="az">A→Z</button>
+    <button class="active" data-vs="date">By Date ↓</button>
+  </div>
+  <div id="vocabList"></div>
+</div>
+
 <script>
 var PWH='b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f346584520e0c';
 var lessons=[
@@ -224,6 +275,9 @@ var lessons=[
   {d:'2026-07-11',w:'Sat',t:'integrate',i:'💡',g:'word',f:'lessons/2026-07-11_wotd_integrate.html'},
   {d:'2026-07-12',w:'Sun',t:'adopt',i:'💡',g:'word',f:'lessons/2026-07-12_wotd_adopt.html'},
   {d:'2026-07-13',w:'Mon',t:'neglect',i:'💡',g:'word',f:'lessons/2026-07-13_wotd_neglect.html'}
+];
+var vocabBook=[
+  {w:'neglect',d:'2026-07-13',m:0}
 ];
 var currentWeek='',currentCat='all',todayStr='',showHistory=false;
 
@@ -550,11 +604,14 @@ u();setInterval(u,300);})();<\/script>';
   });
 }
 
+var _fromVocab=false,_vocabTab='lern',_vocabSort='date';
+
 /* ===== UI ===== */
 document.getElementById('backBtn').addEventListener('click',function(){
   document.getElementById('detail').classList.remove('show');
-  document.getElementById('content').classList.add('show');
   document.getElementById('todaySwitch').style.display='none';
+  if(_fromVocab){_fromVocab=false;document.getElementById('vocabView').classList.add('show')}
+  else{document.getElementById('content').classList.add('show')}
 });
 
 /* ===== FULLSCREEN ===== */
@@ -575,13 +632,16 @@ function toggleDark(){
   var isDark=document.body.classList.contains('dark');
   document.getElementById('darkBtn').textContent=isDark?'☀️':'🌙';
   document.getElementById('darkBtn2').textContent=isDark?'☀️':'🌙';
+  document.getElementById('darkBtn3').textContent=isDark?'☀️':'🌙';
   try{sessionStorage.setItem('ed',isDark?'1':'0')}catch(e){}
 }
 document.getElementById('darkBtn').addEventListener('click',toggleDark);
 document.getElementById('darkBtn2').addEventListener('click',toggleDark);
+document.getElementById('darkBtn3').addEventListener('click',toggleDark);
 try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');
 document.getElementById('darkBtn').textContent='☀️';
-document.getElementById('darkBtn2').textContent='☀️'}}catch(e){}
+document.getElementById('darkBtn2').textContent='☀️';
+document.getElementById('darkBtn3').textContent='☀️'}}catch(e){}
 
 /* ===== TODAY ===== */
 var _tdL=null,_tdW=null;
@@ -607,6 +667,62 @@ document.getElementById('tsLesson').addEventListener('click',function(){
 document.getElementById('tsWord').addEventListener('click',function(){
   if(_tdW){this.classList.add('active');document.getElementById('tsLesson').classList.remove('active');openItem(_tdW)}
 });
+
+/* ===== VOCAB BOOK ===== */
+document.getElementById('vocabBtn').addEventListener('click',showVocabBook);
+document.getElementById('vbBack').addEventListener('click',hideVocabBook);
+function showVocabBook(){
+  document.getElementById('content').classList.remove('show');
+  document.getElementById('vocabView').classList.add('show');
+  renderVocab();
+}
+function hideVocabBook(){
+  document.getElementById('vocabView').classList.remove('show');
+  document.getElementById('content').classList.add('show');
+}
+document.getElementById('vocabTabs').addEventListener('click',function(e){
+  var b=e.target.closest('button');
+  if(!b||!b.dataset.vt)return;
+  _vocabTab=b.dataset.vt;
+  document.querySelectorAll('#vocabTabs button').forEach(function(x){x.classList.toggle('active',x===b)});
+  renderVocab();
+});
+document.getElementById('vocabSort').addEventListener('click',function(e){
+  var b=e.target.closest('button');
+  if(!b||!b.dataset.vs)return;
+  _vocabSort=b.dataset.vs;
+  document.querySelectorAll('#vocabSort button').forEach(function(x){x.classList.toggle('active',x===b)});
+  renderVocab();
+});
+function renderVocab(){
+  var list=document.getElementById('vocabList');
+  var items=vocabBook.filter(function(v){return _vocabTab==='lern'?!v.m:!!v.m});
+  if(items.length===0){
+    list.innerHTML='<div class="vocab-empty"><div class="big">📭</div>'+
+      (_vocabTab==='lern'?'No words in learning yet':'No mastered words yet')+'</div>';
+    return;
+  }
+  var sorted=[].concat(items);
+  if(_vocabSort==='az'){sorted.sort(function(a,b){return a.w<b.w?-1:1})}
+  else{sorted.sort(function(a,b){return a.d<b.d?1:-1})}
+  list.innerHTML='';
+  sorted.forEach(function(v){
+    var card=document.createElement('div');
+    card.className='vocab-card';
+    card.addEventListener('click',function(){
+      _fromVocab=true;
+      var item={t:v.w,i:'💡',g:'word',f:'lessons/'+v.d+'_wotd_'+v.w+'.html'};
+      openItem(item);
+    });
+    var tag=v.m?'mast':'lern';
+    var dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var dt=new Date(v.d+'T12:00:00');
+    card.innerHTML='<div class=\"vw\">💡</div>'+
+      '<div class=\"vi\"><div class=\"vt\">'+v.w+'</div><div class=\"vm\">'+v.d+' · '+dayNames[dt.getDay()]+'</div></div>'+
+      '<div class=\"vs '+tag+'\">'+(v.m?'✅ Mastered':'🔴 Learning')+'</div>';
+    list.appendChild(card);
+  });
+}
 </script>
 </body>
 </html>
