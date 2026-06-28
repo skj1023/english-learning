@@ -160,15 +160,15 @@
   body.dark .vocab-card .vs.mast{background:#1a3a1a;color:#81c784}
 
   /* ── Float Actions (Dark / Fullscreen) ── */
-  .float-actions{position:fixed;bottom:28px;right:28px;display:flex;gap:12px;z-index:9999;opacity:.35;transition:opacity .35s}
+  .float-actions{position:fixed;bottom:28px;left:28px;right:28px;display:flex;align-items:center;gap:12px;z-index:9999;opacity:.35;transition:opacity .35s;pointer-events:none}
   .float-actions:hover,.float-actions:focus-within{opacity:1}
-  .float-btn{width:44px;height:44px;border-radius:50%;border:none;background:rgba(74,144,217,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#555;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 14px rgba(0,0,0,.1);transition:all .25s;user-select:none}
+  .float-btn{width:44px;height:44px;border-radius:50%;border:none;background:rgba(74,144,217,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#555;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 14px rgba(0,0,0,.1);transition:all .25s;user-select:none;pointer-events:auto}
   .float-btn:hover{background:rgba(74,144,217,.25);transform:scale(1.12);box-shadow:0 4px 20px rgba(0,0,0,.18)}
   .float-btn:active{transform:scale(.95)}
   body.dark .float-btn{background:rgba(108,180,238,.1);color:#bbb;box-shadow:0 2px 14px rgba(0,0,0,.35)}
   body.dark .float-btn:hover{background:rgba(108,180,238,.22);color:#e8e8e8}
   @media(max-width:480px){
-    .float-actions{bottom:20px;right:20px;gap:10px}
+    .float-actions{bottom:20px;left:20px;right:20px;gap:10px}
     .float-btn{width:40px;height:40px;font-size:18px}
     .toolbar h1{font-size:18px}
     .week-btn{padding:6px 10px;font-size:12px}
@@ -229,7 +229,6 @@
 
 <div id="detail">
   <div class="detail-top">
-    <button class="back-btn" id="backBtn">← Back</button>
     <div class="today-switch" id="todaySwitch">
       <button class="ts-btn active" id="tsLesson" title="Today's Lesson">📖</button>
       <button class="ts-btn" id="tsWord" title="Today's Word">💡</button>
@@ -241,7 +240,6 @@
 
 <div id="vocabView">
   <div class="vocab-top">
-    <button class="vb-btn" id="vbBack">← Home</button>
     <h2>📕 Vocab Book</h2>
   </div>
   <div class="vocab-vt" id="vocabTabs">
@@ -256,6 +254,8 @@
 </div>
 
 <div class="float-actions" id="floatActions">
+  <button class="float-btn" id="backFloatBtn" style="display:none">←</button>
+  <span style="flex:1"></span>
   <button class="float-btn" id="darkBtn" title="Dark mode">🌙</button>
   <button class="float-btn" id="fsBtn" title="Fullscreen">⛶</button>
 </div>
@@ -488,6 +488,7 @@ function openItem(item){
   document.getElementById('content').classList.remove('show');
   var d=document.getElementById('detail');
   d.classList.add('show');
+  updateBackBtn();
   var ifr=document.getElementById('iframe');
   ifr.srcdoc='<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999"><h2>Loading...</h2></body></html>';
   fetch(item.f).then(function(r){
@@ -615,12 +616,22 @@ u();setInterval(u,300);})();<\/script>';
 
 var _fromVocab=false,_vocabTab='lern',_vocabSort='date';
 
-/* ===== UI ===== */
-document.getElementById('backBtn').addEventListener('click',function(){
-  document.getElementById('detail').classList.remove('show');
-  document.getElementById('todaySwitch').style.display='none';
-  if(_fromVocab){_fromVocab=false;document.getElementById('vocabView').classList.add('show')}
-  else{document.getElementById('content').classList.add('show')}
+/* ===== BACK / NAVIGATION ===== */
+function updateBackBtn(){
+  var show=document.getElementById('detail').classList.contains('show')||document.getElementById('vocabView').classList.contains('show');
+  document.getElementById('backFloatBtn').style.display=show?'flex':'none';
+}
+document.getElementById('backFloatBtn').addEventListener('click',function(){
+  if(document.getElementById('detail').classList.contains('show')){
+    document.getElementById('detail').classList.remove('show');
+    document.getElementById('todaySwitch').style.display='none';
+    if(_fromVocab){_fromVocab=false;document.getElementById('vocabView').classList.add('show')}
+    else{document.getElementById('content').classList.add('show')}
+  }else if(document.getElementById('vocabView').classList.contains('show')){
+    document.getElementById('vocabView').classList.remove('show');
+    document.getElementById('content').classList.add('show');
+  }
+  updateBackBtn();
 });
 
 /* ===== FULLSCREEN ===== */
@@ -670,15 +681,16 @@ document.getElementById('tsWord').addEventListener('click',function(){
 
 /* ===== VOCAB BOOK ===== */
 document.getElementById('vocabBtn').addEventListener('click',showVocabBook);
-document.getElementById('vbBack').addEventListener('click',hideVocabBook);
 function showVocabBook(){
   document.getElementById('content').classList.remove('show');
   document.getElementById('vocabView').classList.add('show');
   renderVocab();
+  updateBackBtn();
 }
 function hideVocabBook(){
   document.getElementById('vocabView').classList.remove('show');
   document.getElementById('content').classList.add('show');
+  updateBackBtn();
 }
 document.getElementById('vocabTabs').addEventListener('click',function(e){
   var b=e.target.closest('button');
