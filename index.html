@@ -191,94 +191,36 @@ const PASSWORD_HASH = 'b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f34658
 
 // 📚 LESSONS DATA — add new entries here
 const lessons = [
-  {
-    date: '2026-06-28',
-    day: 'Sun',
-    title: 'Word of the Day · leverage',
-    icon: '💡',
-    type: 'word',
-    file: 'lessons/2026-06-28_wotd_leverage.html'
-  },
-  {
-    date: '2026-06-29',
-    day: 'Mon',
-    title: '职场表达 · 用英文介绍你的 SA 职位',
-    icon: '🏢',
-    type: 'lesson',
-    file: 'lessons/2026-06-29_monday_workplace.html'
-  },
-  {
-    date: '2026-06-30',
-    day: 'Tue',
-    title: '阅读训练 · AI 文章阅读',
-    icon: '📖',
-    type: 'lesson',
-    file: 'lessons/2026-06-30_tuesday_reading.html'
-  },
-  {
-    date: '2026-07-01',
-    day: 'Wed',
-    title: '口语场景 · 向客户介绍 AI 方案',
-    icon: '🎤',
-    type: 'lesson',
-    file: 'lessons/2026-07-01_wednesday_speaking.html'
-  },
-  {
-    date: '2026-07-02',
-    day: 'Thu',
-    title: '词汇升级 · 5组职场动词升级',
-    icon: '🔥',
-    type: 'lesson',
-    file: 'lessons/2026-07-02_thursday_vocab.html'
-  },
-  {
-    date: '2026-07-03',
-    day: 'Fri',
-    title: '听力训练 · TED Talk 影子跟读',
-    icon: '🎬',
-    type: 'lesson',
-    file: 'lessons/2026-07-03_friday_listening.html'
-  },
-  {
-    date: '2026-06-30',
-    day: 'Tue',
-    title: 'identify',
-    icon: '💡',
-    type: 'word',
-    file: 'lessons/2026-06-30_wotd_identify.html'
-  },
-  {
-    date: '2026-07-01',
-    day: 'Wed',
-    title: 'enable',
-    icon: '💡',
-    type: 'word',
-    file: 'lessons/2026-07-01_wotd_enable.html'
-  },
-  {
-    date: '2026-07-02',
-    day: 'Thu',
-    title: 'implement',
-    icon: '💡',
-    type: 'word',
-    file: 'lessons/2026-07-02_wotd_implement.html'
-  },
-  {
-    date: '2026-07-03',
-    day: 'Fri',
-    title: 'optimize',
-    icon: '💡',
-    type: 'word',
-    file: 'lessons/2026-07-03_wotd_optimize.html'
-  },
-  {
-    date: '2026-07-05',
-    day: 'Sun',
-    title: '🎯 外教课准备 · Talking About Your Work',
-    icon: '🎯',
-    type: 'lesson',
-    file: 'lessons/2026-07-05_sunday_class_prep.html'
-  }
+  // ─── Week 1: Jun 28 - Jul 5 ───
+  { date:'2026-06-28', day:'Sun', title:'leverage', icon:'💡', type:'word', file:'lessons/2026-06-28_wotd_leverage.html' },
+  { date:'2026-06-29', day:'Mon', title:'职场表达 · SA自我介绍', icon:'🏢', type:'lesson', file:'lessons/2026-06-29_monday_workplace.html' },
+  { date:'2026-06-29', day:'Mon', title:'tailor', icon:'💡', type:'word', file:'lessons/2026-06-29_wotd_tailor.html' },
+  { date:'2026-06-30', day:'Tue', title:'阅读训练 · AI文章', icon:'📖', type:'lesson', file:'lessons/2026-06-30_tuesday_reading.html' },
+  { date:'2026-06-30', day:'Tue', title:'identify', icon:'💡', type:'word', file:'lessons/2026-06-30_wotd_identify.html' },
+  { date:'2026-07-01', day:'Wed', title:'口语场景 · 向客户介绍AI', icon:'🎤', type:'lesson', file:'lessons/2026-07-01_wednesday_speaking.html' },
+  { date:'2026-07-01', day:'Wed', title:'enable', icon:'💡', type:'word', file:'lessons/2026-07-01_wotd_enable.html' },
+  { date:'2026-07-02', day:'Thu', title:'词汇升级 · 5组动词升级', icon:'🔥', type:'lesson', file:'lessons/2026-07-02_thursday_vocab.html' },
+  { date:'2026-07-02', day:'Thu', title:'implement', icon:'💡', type:'word', file:'lessons/2026-07-02_wotd_implement.html' },
+  { date:'2026-07-03', day:'Fri', title:'听力训练 · TED影子跟读', icon:'🎬', type:'lesson', file:'lessons/2026-07-03_friday_listening.html' },
+  { date:'2026-07-03', day:'Fri', title:'optimize', icon:'💡', type:'word', file:'lessons/2026-07-03_wotd_optimize.html' },
+  { date:'2026-07-04', day:'Sat', title:'align', icon:'💡', type:'word', file:'lessons/2026-07-04_wotd_align.html' },
+  { date:'2026-07-05', day:'Sun', title:'streamline', icon:'💡', type:'word', file:'lessons/2026-07-05_wotd_streamline.html' },
+  { date:'2026-07-05', day:'Sun', title:'外教课准备包', icon:'🎯', type:'lesson', file:'lessons/2026-07-05_sunday_class_prep.html' },
+
+  // ─── Week 2: Jul 6 - Jul 12 (content ready by Sun 7/5) ───
+  { date:'2026-07-06', day:'Mon', title:'职场表达 · Pitching AI', icon:'🏢', type:'lesson', file:'lessons/2026-07-06_职场表达_pitching_ai_solutions_to_.html' },
+  { date:'2026-07-06', day:'Mon', title:'negotiate', icon:'💡', type:'word', file:'lessons/2026-07-06_wotd_negotiate.html' },
+  { date:'2026-07-07', day:'Tue', title:'阅读训练 · AI in Enterprise', icon:'📖', type:'lesson', file:'lessons/2026-07-07_阅读训练_ai_in_enterprise.html' },
+  { date:'2026-07-07', day:'Tue', title:'automate', icon:'💡', type:'word', file:'lessons/2026-07-07_wotd_automate.html' },
+  { date:'2026-07-08', day:'Wed', title:'口语场景 · 应对客户异议', icon:'🎤', type:'lesson', file:'lessons/2026-07-08_口语场景_handling_client_objection.html' },
+  { date:'2026-07-08', day:'Wed', title:'demonstrate', icon:'💡', type:'word', file:'lessons/2026-07-08_wotd_demonstrate.html' },
+  { date:'2026-07-09', day:'Thu', title:'词汇升级 · Business Adjectives', icon:'🔥', type:'lesson', file:'lessons/2026-07-09_词汇升级_business_adjectives.html' },
+  { date:'2026-07-09', day:'Thu', title:'evaluate', icon:'💡', type:'word', file:'lessons/2026-07-09_wotd_evaluate.html' },
+  { date:'2026-07-10', day:'Fri', title:'听力训练 · 电影场景', icon:'🎬', type:'lesson', file:'lessons/2026-07-10_听力训练_movie_scene.html' },
+  { date:'2026-07-10', day:'Fri', title:'collaborate', icon:'💡', type:'word', file:'lessons/2026-07-10_wotd_collaborate.html' },
+  { date:'2026-07-11', day:'Sat', title:'integrate', icon:'💡', type:'word', file:'lessons/2026-07-11_wotd_integrate.html' },
+  { date:'2026-07-12', day:'Sun', title:'adopt', icon:'💡', type:'word', file:'lessons/2026-07-12_wotd_adopt.html' },
+  { date:'2026-07-12', day:'Sun', title:'外教课准备包', icon:'🎯', type:'lesson', file:'lessons/2026-07-12_外教课准备_本周主题.html' }
 ];
 
 /* ==========================================================
