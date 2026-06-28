@@ -164,72 +164,15 @@ def sync_vocab():
     print("Cleared _vocab_pending.md")
     return True
 
-# ─── REVIEW NOTE SYNC (new) ─────────────────────────────
-
-def parse_review_notes(path):
-    """Parse _review_notes.md, return dict: date -> list of entry dicts."""
-    if not os.path.exists(path):
-        return {}
-    with open(path, 'r', encoding='utf-8') as f:
-        content = f.read()
-    blocks = re.split(r'^##\s+', content, flags=re.MULTILINE)
-    result = {}
-    for block in blocks:
-        block = block.strip()
-        if not block:
-            continue
-        lines = block.split('\n')
-        date_match = re.match(r'(\d{4}-\d{2}-\d{2})', lines[0])
-        if not date_match:
-            continue
-        date = date_match.group(1)
-        entries = []
-        current = None
-        for line in lines[1:]:
-            line = line.strip()
-            if not line:
-                continue
-            if line.startswith('word:'):
-                if current:
-                    entries.append(current)
-                current = {'type':'word','word':line[5:].strip(),'file':'','note':'','sentence':'','correction':'','key_point':''}
-            elif line.startswith('lesson:'):
-                if current:
-                    entries.append(current)
-                current = {'type':'lesson','title':line[7:].strip(),'file':'','note':'','sentence':'','correction':'','key_point':''}
-            elif line.startswith('file:'):
-                if current:
-                    current['file'] = line[5:].strip()
-            elif line.startswith('note:'):
-                if current:
-                    current['note'] = line[5:].strip()
-            elif line.startswith('sentence:'):
-                if current:
-                    current['sentence'] = line[9:].strip()
-            elif line.startswith('correction:'):
-                if current:
-                    current['correction'] = line[11:].strip()
-            elif line.startswith('key_point:'):
-                if current:
-                    current['key_point'] = line[10:].strip()
-        if current:
-            entries.append(current)
-        if entries:
-            result[date] = entries
-    return result
+# ─── PLACEHOLDER SYNC (03:00 fallback) ──────────────────
 
 def find_yesterday_lessons(content, date):
-    """Find entries in the lessons array matching a given date."""
     pattern = r"\{d:'" + re.escape(date) + r"',[^}]+?\}"
     matches = re.findall(pattern, content)
     result = []
     for m in matches:
-        title = re.search(r"t:'([^']+)'", m)
-        typ = re.search(r"g:'([^']+)'", m)
         f = re.search(r"f:'([^']+)'", m)
-        result.append({'title': title.group(1) if title else '',
-                       'type': typ.group(1) if typ else '',
-                       'file': f.group(1) if f else ''})
+        result.append({'file': f.group(1) if f else ''})
     return result
 
 def file_has_review_note(filepath):
@@ -238,20 +181,13 @@ def file_has_review_note(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         return 'id="review-note"' in f.read()
 
-def inject_review_note(filepath, entry, date, is_placeholder=False):
-    if not os.path.exists(filepath):
-        print(f"  File not found: {filepath}")
+def inject_placeholder(filepath, date):
+    if not os.path.exists(filepath) or file_has_review_note(filepath):
         return False
-    if file_has_review_note(filepath):
-        return False
-
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
-
     display_date = format_date_display(date)
-
-    if is_placeholder:
-        note_block = f'''
+    note = f'''
 <div class="section review-note" id="review-note">
   <div class="section-title"><span class="icon">📝</span> Review Note <span style="font-size:11px;color:#6c757d;font-weight:400;margin-left:6px;">&middot; {display_date}</span></div>
   <div class="task-box">
@@ -259,113 +195,26 @@ def inject_review_note(filepath, entry, date, is_placeholder=False):
     <p style="margin-top:6px;">&#128161; Consider revisiting this material and jotting down your key takeaways.</p>
   </div>
 </div>'''
-    else:
-        parts = []
-        if entry.get('note'):
-            parts.append(f'<p><strong>Your understanding:</strong> {entry["note"]}</p>')
-        if entry.get('sentence'):
-            parts.append(f'<p style="margin-top:6px;"><strong>Your sentence:</strong> &ldquo;{entry["sentence"]}&rdquo;</p>')
-        if entry.get('correction'):
-            parts.append(f'<p style="margin-top:6px;"><strong>Refined:</strong> {entry["correction"]}</p>')
-        if entry.get('key_point'):
-            sep = '<p style="margin-top:6px;border-top:1px solid #ffe082;padding-top:6px;">' if len(parts) > 0 else '<p>'
-            parts.append(f'{sep}&#128161; <strong>Key takeaway:</strong> {entry["key_point"]}</p>')
-        body = '\n    '.join(parts) if parts else '<p>Review notes from our conversation.</p>'
-        note_block = f'''
-<div class="section review-note" id="review-note">
-  <div class="section-title"><span class="icon">📝</span> Review Note <span style="font-size:11px;color:#6c757d;font-weight:400;margin-left:6px;">&middot; {display_date}</span></div>
-  <div class="task-box">
-    {body}
-  </div>
-</div>'''
-
-    content = content.replace('</body>', note_block + '\n\n</body>')
+    content = content.replace('</body>', note + '\n\n</body>')
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
     return True
 
-def cleanup_notes_file(path, yesterday):
-    """Remove yesterday's date block from _review_notes.md."""
-    if not os.path.exists(path):
-        return
-    with open(path, 'r', encoding='utf-8') as f:
-        content = f.read()
-    lines = content.split('\n')
-    result = []
-    skip = False
-    for line in lines:
-        if re.match(r'^##\s+' + re.escape(yesterday) + r'\b', line):
-            skip = True
-            continue
-        if re.match(r'^##\s+\d{4}-\d{2}-\d{2}', line):
-            skip = False
-        if not skip:
-            result.append(line)
-    new_content = '\n'.join(result).strip()
-    if not new_content:
-        new_content = '# Review Notes - Daily Conversation Records\n'
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write(new_content + '\n')
-    print("  Cleaned up yesterday's entries from _review_notes.md")
-
-def sync_review_notes():
+def sync_placeholders():
     yesterday = get_yesterday_bjt()
-    print(f"\n=== Review Notes for {yesterday} ===")
-
-    notes = parse_review_notes(REVIEW_PATH)
-    yesterday_notes = notes.get(yesterday, [])
-
-    word_notes = {e['word']: e for e in yesterday_notes if e['type'] == 'word' and e.get('word')}
-    lesson_notes = {e['title']: e for e in yesterday_notes if e['type'] == 'lesson' and e.get('title')}
-    file_notes = {e['file']: e for e in yesterday_notes if e.get('file')}
-
-    changes = []
-
-    # 1. Inject by explicit file path
-    for filepath, entry in file_notes.items():
-        fullpath = os.path.join(BASE_DIR, filepath)
-        if inject_review_note(fullpath, entry, yesterday, False):
-            changes.append(filepath)
-            print(f"  Injected: {filepath}")
-
-    # 2. Inject word entries by auto-derived path
-    for word, entry in word_notes.items():
-        if entry.get('file') and entry['file'] in file_notes:
-            continue
-        filepath = os.path.join(LESSONS_DIR, f'{yesterday}_wotd_{word}.html')
-        if inject_review_note(filepath, entry, yesterday, False):
-            rel = f'lessons/{yesterday}_wotd_{word}.html'
-            changes.append(rel)
-            print(f"  Injected: {rel}")
-
-    # 3. Inject placeholders for yesterday's unmatched items
-    if os.path.exists(INDEX_PATH):
-        content = read_index(INDEX_PATH)
-        yesterday_items = find_yesterday_lessons(content, yesterday)
-        for item in yesterday_items:
-            filepath = os.path.normpath(os.path.join(BASE_DIR, item['file']))
-            if file_has_review_note(filepath):
-                continue
-            # Check if this item already has a note
-            has_note = False
-            if item['type'] == 'word' and item['title'].lower() in word_notes:
-                has_note = True
-            elif item['type'] == 'lesson' and item['title'] in lesson_notes:
-                has_note = True
-            if not has_note:
-                # Also check file_notes
-                if item['file'] in file_notes:
-                    has_note = True
-            if not has_note:
-                if inject_review_note(filepath, {}, yesterday, True):
-                    changes.append(item['file'])
-                    print(f"  Placeholder: {item['file']}")
-
-    # 4. Clean up
-    if changes:
-        cleanup_notes_file(REVIEW_PATH, yesterday)
-    else:
-        print("  No changes to inject.")
+    print(f"\n=== Checking placeholders for {yesterday} ===")
+    if not os.path.exists(INDEX_PATH):
+        return False
+    content = read_index(INDEX_PATH)
+    items = find_yesterday_lessons(content, yesterday)
+    changes = False
+    for item in items:
+        fp = os.path.normpath(os.path.join(BASE_DIR, item['file']))
+        if inject_placeholder(fp, yesterday):
+            print(f"  Placeholder: {item['file']}")
+            changes = True
+    if not changes:
+        print("  All reviewed or no lessons found.")
     return changes
 
 # ─── GIT PUSH ────────────────────────────────────────────
@@ -388,7 +237,7 @@ def git_push():
 def main():
     print("=== Daily Sync ===")
     v = sync_vocab()
-    r = sync_review_notes()
+    r = sync_placeholders()
     if v or r:
         print("\nPushing changes...")
         git_push()
