@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Echo English · Lance's Learning Hub</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px; line-height: 1.7; color: #1a1a2e; background: #f8f9fa;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Login Screen ── */
+  #login-screen {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: #1a1a2e; display: flex; align-items: center; justify-content: center;
+    z-index: 9999; backdrop-filter: blur(4px);
+  }
+  #login-screen.hidden { display: none; }
+  .login-box {
+    background: #16213e; border-radius: 16px; padding: 40px 32px;
+    width: 90%; max-width: 380px; text-align: center;
+  }
+  .login-box h1 { font-size: 24px; color: #e0e0e0; margin-bottom: 4px; }
+  .login-box p { font-size: 14px; color: #6c757d; margin-bottom: 24px; }
+  .login-box input {
+    width: 100%; padding: 14px 16px; border: 1px solid #2d3436; border-radius: 10px;
+    background: #1a1a2e; color: #e0e0e0; font-size: 16px; outline: none; transition: border 0.2s;
+  }
+  .login-box input:focus { border-color: #4a90d9; }
+  .login-box button {
+    width: 100%; padding: 14px; margin-top: 12px;
+    background: #4a90d9; color: #fff; border: none; border-radius: 10px;
+    font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  .login-box button:hover { background: #357abd; }
+  .login-box .error { color: #ef5350; font-size: 13px; margin-top: 8px; display: none; }
+
+  /* ── Main Content ── */
+  #content { display: none; max-width: 720px; margin: 0 auto; padding: 20px 16px 80px; }
+  #content.show { display: block; }
+
+  .header {
+    padding: 24px 0 16px; border-bottom: 2px solid #e9ecef; margin-bottom: 20px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+  .header .sub { font-size: 13px; color: #6c757d; margin-top: 2px; }
+
+  .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat-card {
+    flex: 1; min-width: 100px; background: #fff; border-radius: 10px; padding: 14px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); text-align: center;
+  }
+  .stat-card .num { font-size: 24px; font-weight: 700; color: #4a90d9; }
+  .stat-card .label { font-size: 12px; color: #6c757d; margin-top: 2px; }
+
+  /* ── Lesson List ── */
+  .day-group { margin-bottom: 24px; }
+  .day-label {
+    font-size: 13px; font-weight: 600; color: #6c757d; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 8px;
+  }
+
+  .lesson-card {
+    background: #fff; border-radius: 10px; padding: 16px; margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); cursor: pointer; transition: box-shadow 0.2s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .lesson-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .lesson-card .icon {
+    width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; flex-shrink: 0;
+  }
+  .lesson-card .info { flex: 1; }
+  .lesson-card .title { font-size: 15px; font-weight: 600; color: #1a1a2e; }
+  .lesson-card .meta { font-size: 12px; color: #6c757d; margin-top: 2px; }
+  .lesson-card .status {
+    font-size: 11px; padding: 2px 8px; border-radius: 8px; font-weight: 600;
+  }
+  .status.done { background: #e8f5e9; color: #2e7d32; }
+  .status.pending { background: #fff3e0; color: #e65100; }
+  .status.new { background: #e3f2fd; color: #1565c0; }
+
+  /* ── Lesson Detail View ── */
+  #lesson-detail {
+    display: none; max-width: 720px; margin: 0 auto; padding: 20px 16px 80px;
+  }
+  #lesson-detail.show { display: block; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
+    background: #fff; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer;
+    font-size: 14px; color: #495057; margin-bottom: 16px; transition: background 0.2s;
+  }
+  .back-btn:hover { background: #f8f9fa; }
+
+  .lesson-frame {
+    width: 100%; border: 1px solid #e9ecef; border-radius: 12px; overflow: hidden;
+    background: #fff; min-height: 400px;
+  }
+  .lesson-frame iframe {
+    width: 100%; height: 100vh; border: none; display: block;
+  }
+
+  /* ── Footer ── */
+  .footer { text-align: center; padding: 20px 0; font-size: 12px; color: #adb5bd; }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    #content { padding: 12px 12px 60px; }
+    .header h1 { font-size: 20px; }
+    .stat-card .num { font-size: 20px; }
+  }
+
+  /* ── Dark Mode ── */
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e0e0e0; }
+    .stat-card { background: #16213e; }
+    .stat-card .num { color: #6cb4ee; }
+    .lesson-card { background: #16213e; }
+    .lesson-card .title { color: #e0e0e0; }
+    .header { border-bottom-color: #2d3436; }
+    .header h1 { color: #e0e0e0; }
+    .back-btn { background: #16213e; border-color: #2d3436; color: #adb5bd; }
+    .back-btn:hover { background: #1a1a2e; }
+    .lesson-frame { border-color: #2d3436; background: #16213e; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────── LOGIN SCREEN ──────── -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>🔐 Echo English</h1>
+    <p>Lance's Learning Hub</p>
+    <input type="password" id="password-input" placeholder="Entrez le mot de passe" autofocus
+           onkeydown="if(event.key==='Enter')checkPassword()">
+    <button onclick="checkPassword()">Déverrouiller</button>
+    <div class="error" id="login-error">Mot de passe incorrect</div>
+  </div>
+</div>
+
+<!-- ──────── MAIN CONTENT (Lesson List) ──────── -->
+<div id="content">
+  <div class="header">
+    <h1>📚 Echo English</h1>
+    <div class="sub">Lance's Personal Learning Hub · Updated daily</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num" id="total-lessons">0</div>
+      <div class="label">Lessons</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="total-words">0</div>
+      <div class="label">Words</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="streak-days">—</div>
+      <div class="label">Week</div>
+    </div>
+  </div>
+
+  <div id="lesson-list">
+    <!-- Rendered by JS -->
+  </div>
+  <div class="footer">Echo · Your personal English coach</div>
+</div>
+
+<!-- ──────── LESSON DETAIL VIEW ──────── -->
+<div id="lesson-detail">
+  <button class="back-btn" onclick="showList()">← Back to list</button>
+  <div class="lesson-frame" id="lesson-frame">
+    <iframe id="lesson-iframe" srcdoc=""></iframe>
+  </div>
+</div>
+
+<script>
+/* ==========================================================
+   CONFIGURATION
+   ========================================================== */
+
+// 🔑 PASSWORD — SHA-256 hash of the actual password
+// Current password: echo@2026 (you can change the hash below)
+// To set a new password, run: echo -n "newpassword" | sha256sum
+// Then replace the hash below.
+const PASSWORD_HASH = 'b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f346584520e0c';
+
+// 📚 LESSONS DATA — add new entries here
+const lessons = [
+  {
+    date: '2026-06-28',
+    day: 'Sun',
+    title: 'Word of the Day · leverage',
+    icon: '💡',
+    type: 'word',
+    file: 'lessons/2026-06-28_wotd_leverage.html'
+  },
+  {
+    date: '2026-06-29',
+    day: 'Mon',
+    title: '职场表达 · 用英文介绍你的 SA 职位',
+    icon: '🏢',
+    type: 'lesson',
+    file: 'lessons/2026-06-29_monday_workplace.html'
+  },
+  {
+    date: '2026-06-30',
+    day: 'Tue',
+    title: '阅读训练 · AI 文章阅读',
+    icon: '📖',
+    type: 'lesson',
+    file: 'lessons/2026-06-30_tuesday_reading.html'
+  },
+  {
+    date: '2026-07-01',
+    day: 'Wed',
+    title: '口语场景 · 向客户介绍 AI 方案',
+    icon: '🎤',
+    type: 'lesson',
+    file: 'lessons/2026-07-01_wednesday_speaking.html'
+  },
+  {
+    date: '2026-07-02',
+    day: 'Thu',
+    title: '词汇升级 · 5组职场动词升级',
+    icon: '🔥',
+    type: 'lesson',
+    file: 'lessons/2026-07-02_thursday_vocab.html'
+  },
+  {
+    date: '2026-07-03',
+    day: 'Fri',
+    title: '听力训练 · TED Talk 影子跟读',
+    icon: '🎬',
+    type: 'lesson',
+    file: 'lessons/2026-07-03_friday_listening.html'
+  }
+];
+
+/* ==========================================================
+   PASSWORD AUTH
+   ========================================================== */
+
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPassword() {
+  const input = document.getElementById('password-input');
+  const hash = await sha256(input.value);
+  if (hash === PASSWORD_HASH) {
+    sessionStorage.setItem('echo_auth', '1');
+    document.getElementById('login-screen').classList.add('hidden');
+    renderContent();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    input.value = '';
+    input.focus();
+  }
+}
+
+/* ==========================================================
+   RENDER
+   ========================================================== */
+
+function renderContent() {
+  document.getElementById('content').classList.add('show');
+  document.getElementById('total-lessons').textContent = lessons.filter(l => l.type === 'lesson').length;
+  document.getElementById('total-words').textContent = lessons.filter(l => l.type === 'word').length;
+
+  const list = document.getElementById('lesson-list');
+  list.innerHTML = '';
+
+  // Group by date
+  const groups = {};
+  const today = new Date().toISOString().split('T')[0];
+
+  lessons.forEach(l => {
+    const weekStart = getWeekStart(l.date);
+    if (!groups[weekStart]) groups[weekStart] = [];
+    groups[weekStart].push(l);
+  });
+
+  Object.keys(groups).sort().reverse().forEach(week => {
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'day-group';
+
+    const label = document.createElement('div');
+    label.className = 'day-label';
+    const weekEnd = addDays(week, 6);
+    label.textContent = `${week} ~ ${weekEnd}`;
+    groupDiv.appendChild(label);
+
+    groups[week].sort((a, b) => a.date.localeCompare(b.date)).forEach(l => {
+      const card = document.createElement('div');
+      card.className = 'lesson-card';
+      card.onclick = () => openLesson(l);
+
+      let statusClass = 'new';
+      let statusText = 'New';
+      if (l.date < today) { statusClass = 'done'; statusText = 'Done'; }
+      if (l.date === today) { statusClass = 'pending'; statusText = 'Today'; }
+
+      const iconBg = l.type === 'word' ? '#fff3e0' : '#e3f2fd';
+
+      card.innerHTML = `
+        <div class="icon" style="background:${iconBg}">${l.icon}</div>
+        <div class="info">
+          <div class="title">${l.title}</div>
+          <div class="meta">${l.date} · ${l.day}${l.type === 'word' ? ' · Word of the Day' : ''}</div>
+        </div>
+        <div class="status ${statusClass}">${statusText}</div>
+      `;
+      groupDiv.appendChild(card);
+    });
+
+    list.appendChild(groupDiv);
+  });
+}
+
+function getWeekStart(dateStr) {
+  const d = new Date(dateStr);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  return d.toISOString().split('T')[0];
+}
+
+function addDays(dateStr, days) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+function openLesson(lesson) {
+  document.getElementById('content').classList.remove('show');
+  const detail = document.getElementById('lesson-detail');
+  detail.classList.add('show');
+  const iframe = document.getElementById('lesson-iframe');
+  iframe.srcdoc = `<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999;">
+    <h2>Loading...</h2>
+    <p style="font-size:14px;">${lesson.title}</p>
+  </body></html>`;
+
+  // Fetch the lesson HTML file
+  fetch(lesson.file)
+    .then(r => {
+      if (!r.ok) throw new Error('Not found');
+      return r.text();
+    })
+    .then(html => {
+      iframe.srcdoc = html;
+    })
+    .catch(() => {
+      iframe.srcdoc = `<html><body style="font-family:sans-serif;padding:40px;text-align:center;color:#999;">
+        <h2>⏳ Coming Soon</h2>
+        <p style="font-size:14px;">${lesson.title}</p>
+        <p style="font-size:13px;">This lesson will be available on ${lesson.date}</p>
+      </body></html>`;
+    });
+}
+
+function showList() {
+  document.getElementById('lesson-detail').classList.remove('show');
+  document.getElementById('content').classList.add('show');
+}
+
+/* ==========================================================
+   INIT — check session
+   ========================================================== */
+
+if (sessionStorage.getItem('echo_auth') === '1') {
+  document.getElementById('login-screen').classList.add('hidden');
+  renderContent();
+} else {
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
