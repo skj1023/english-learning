@@ -25,6 +25,7 @@
   body.dark .focus-card .fi-t{color:#e8e8e8}
   body.dark .focus-card .fi-s{color:#aaa}
   body.dark .toolbar-btn{background:#1a1a2e;color:#bbb;border-color:#2d2d5e}
+  body.dark .today-btn{background:#2d5a9e}
   body.dark .login-box{background:#1a1a2e}
   body.dark .login-box input{background:#0f0f1a;border-color:#2d2d5e;color:#e8e8e8}
   body.dark .login-box h1{color:#e8e8e8}
@@ -62,6 +63,13 @@
   .toolbar h1{font-size:20px;font-weight:700}
   .toolbar-actions{display:flex;gap:6px}
   .toolbar-btn{width:36px;height:36px;border-radius:8px;border:1px solid #e0e0e0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+  .today-btn{padding:6px 14px;background:#4a90d9;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+  .today-btn:active{background:#357abd}
+  .today-switch{display:none;gap:4px;flex-shrink:0}
+  .ts-btn{padding:4px 9px;border:1px solid #e0e0e0;border-radius:6px;background:#f5f5f5;color:#999;font-size:14px;cursor:pointer;line-height:1}
+  .ts-btn.active{background:#4a90d9;color:#fff;border-color:#4a90d9}
+  body.dark .ts-btn{background:#1a1a2e;border-color:#2d2d5e;color:#666}
+  body.dark .ts-btn.active{background:#2d5a9e;border-color:#2d5a9e;color:#fff}
 
   /* ── Week Tabs ── */
   .week-tabs{display:flex;gap:0;overflow-x:auto;padding:4px 0 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -143,9 +151,12 @@
   <div class="top-bar">
     <div class="toolbar">
       <h1>📚 Echo</h1>
-      <div class="toolbar-actions">
-        <button class="toolbar-btn" id="darkBtn" title="Dark mode">🌙</button>
-        <button class="toolbar-btn" id="fsBtn" title="Fullscreen">⛶</button>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="today-btn" id="todayBtn">📅 Today</button>
+        <div class="toolbar-actions">
+          <button class="toolbar-btn" id="darkBtn" title="Dark mode">🌙</button>
+          <button class="toolbar-btn" id="fsBtn" title="Fullscreen">⛶</button>
+        </div>
       </div>
     </div>
     <div class="week-tabs" id="weekTabs"></div>
@@ -178,6 +189,10 @@
 <div id="detail">
   <div class="detail-top">
     <button class="back-btn" id="backBtn">← Back</button>
+    <div class="today-switch" id="todaySwitch">
+      <button class="ts-btn active" id="tsLesson" title="Today's Lesson">📖</button>
+      <button class="ts-btn" id="tsWord" title="Today's Word">💡</button>
+    </div>
     <div class="spacer"></div>
     <button class="dt-btn" id="darkBtn2" title="Dark mode">🌙</button>
     <button class="dt-btn" id="fsBtn2" title="Fullscreen">⛶</button>
@@ -528,6 +543,7 @@ u();setInterval(u,300);})();<\/script>';
 document.getElementById('backBtn').addEventListener('click',function(){
   document.getElementById('detail').classList.remove('show');
   document.getElementById('content').classList.add('show');
+  document.getElementById('todaySwitch').style.display='none';
 });
 
 /* ===== FULLSCREEN ===== */
@@ -555,6 +571,31 @@ document.getElementById('darkBtn2').addEventListener('click',toggleDark);
 try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');
 document.getElementById('darkBtn').textContent='☀️';
 document.getElementById('darkBtn2').textContent='☀️'}}catch(e){}
+
+/* ===== TODAY ===== */
+var _tdL=null,_tdW=null;
+document.getElementById('todayBtn').addEventListener('click',goToday);
+function goToday(){
+  var items=lessons.filter(function(l){return l.d===todayStr});
+  if(items.length===0){
+    switchWeek(getWeekStart(todayStr));window.scrollTo(0,0);return;
+  }
+  _tdL=null;_tdW=null;
+  items.forEach(function(l){if(l.g==='lesson')_tdL=l;else if(l.g==='word')_tdW=l});
+  var sw=document.getElementById('todaySwitch');
+  if(_tdL&&_tdW){
+    sw.style.display='flex';
+    document.getElementById('tsLesson').classList.add('active');
+    document.getElementById('tsWord').classList.remove('active');
+  }else{sw.style.display='none'}
+  openItem(_tdL||_tdW);
+}
+document.getElementById('tsLesson').addEventListener('click',function(){
+  if(_tdL){this.classList.add('active');document.getElementById('tsWord').classList.remove('active');openItem(_tdL)}
+});
+document.getElementById('tsWord').addEventListener('click',function(){
+  if(_tdW){this.classList.add('active');document.getElementById('tsLesson').classList.remove('active');openItem(_tdW)}
+});
 </script>
 </body>
 </html>
