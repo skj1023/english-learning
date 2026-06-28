@@ -444,7 +444,7 @@ function restoreState(){
 function render(){
   var end=addDays(currentWeek,6);
   var items=lessons.filter(function(l){return l.d>=currentWeek&&l.d<=end});
-  if(!showHistory){
+  if(!showHistory && currentWeek===_realWeek){
     items=items.filter(function(l){return l.d>=todayStr||l.d===currentWeek});
   }
   if(currentCat==='lessons'){items=items.filter(function(l){return l.g==='lesson'})}
