@@ -260,7 +260,18 @@ function init(){
   todayStr=getBeijingDate();
   buildWeeks();
   restoreState();
+  syncActiveTabs();
   render();
+  goToday();
+}
+function syncActiveTabs(){
+  document.querySelectorAll('.week-btn').forEach(function(b){
+    b.classList.toggle('active',b.dataset.week===currentWeek);
+  });
+  document.querySelectorAll('.cat-btn').forEach(function(b){
+    var match=currentCat==='all'?'All':currentCat==='lessons'?'Lessons':'Words';
+    b.classList.toggle('active',b.textContent.indexOf(match)>=0);
+  });
 }
 function getWeekStart(d){var dt=new Date(d);var day=dt.getDay();var diff=dt.getDate()-day+(day===0?-6:1);dt.setDate(diff);return dt.toISOString().slice(0,10)}
 function addDays(d,n){var dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10)}
