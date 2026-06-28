@@ -88,10 +88,16 @@
   .tag.word{background:#fce4ec;color:#c62828;font-size:9px}
 
   /* ── Detail ── */
-  #detail{display:none;max-width:640px;margin:0 auto;padding:12px 16px 60px}
+  #detail{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
   #detail.show{display:block}
-  .back-btn{display:inline-flex;align-items:center;gap:4px;padding:7px 12px;background:#fff;border:1px solid #e9ecef;border-radius:8px;cursor:pointer;font-size:13px;color:#495057;margin-bottom:12px}
-  .lesson-frame{border:1px solid #e9ecef;border-radius:12px;overflow:hidden;background:#fff}
+  .detail-top{position:sticky;top:0;z-index:100;background:#f8f9fa;padding:12px 16px;display:flex;align-items:center;gap:8px;transition:background .3s}
+  body.dark .detail-top{background:#0f0f1a}
+  .detail-top .back-btn{padding:7px 12px;background:#fff;border:1px solid #e9ecef;border-radius:8px;cursor:pointer;font-size:13px;color:#495057;display:flex;align-items:center;gap:4px;flex-shrink:0}
+  body.dark .detail-top .back-btn{background:#1a1a2e;border-color:#2d3436;color:#adb5bd}
+  .detail-top .spacer{flex:1}
+  .detail-top .dt-btn{width:34px;height:34px;border-radius:8px;border:1px solid #e9ecef;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+  body.dark .detail-top .dt-btn{background:#1a1a2e;border-color:#2d3436;color:#adb5bd}
+  .lesson-frame{border:1px solid #e9ecef;border-radius:12px;overflow:hidden;background:#fff;margin:0 16px 16px}
   .lesson-frame iframe{width:100%;height:100dvh;border:none;display:block}
 
   /* ── Empty State ── */
@@ -154,7 +160,12 @@
 
 <!-- Detail -->
 <div id="detail">
-  <button class="back-btn" onclick="closeDetail()">← Back</button>
+  <div class="detail-top">
+    <button class="back-btn" onclick="closeDetail()">← Back</button>
+    <div class="spacer"></div>
+    <button class="dt-btn" onclick="toggleDark()" id="darkBtn2" title="Dark mode">🌙</button>
+    <button class="dt-btn" onclick="goFullscreen()" id="fsBtn2" title="Fullscreen">⛶</button>
+  </div>
   <div class="lesson-frame"><iframe id="iframe" srcdoc=""></iframe></div>
 </div>
 
@@ -363,18 +374,19 @@ function goFullscreen(){
   else{document.exitFullscreen().catch(()=>{})}
 }
 document.addEventListener('fullscreenchange',()=>{
-  document.getElementById('fsBtn').textContent=document.fullscreenElement?'✕':'⛶';
+  const t=document.fullscreenElement?'✕':'⛶';
+  document.querySelectorAll('#fsBtn,#fsBtn2').forEach(b=>b.textContent=t);
 });
 
 /* ===== DARK MODE ===== */
 function toggleDark(){
   document.body.classList.toggle('dark');
   const isDark=document.body.classList.contains('dark');
-  document.getElementById('darkBtn').textContent=isDark?'☀️':'🌙';
+  document.querySelectorAll('#darkBtn,#darkBtn2').forEach(b=>b.textContent=isDark?'☀️':'🌙');
   try{sessionStorage.setItem('ed',isDark?'1':'0')}catch(e){}
 }
 // Restore dark mode
-try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');document.getElementById('darkBtn').textContent='☀️'}}catch(e){}
+try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');document.querySelectorAll('#darkBtn,#darkBtn2').forEach(b=>b.textContent='☀️')}}catch(e){}
 
 /* ===== BOOT ===== */
 if(sessionStorage.getItem('ea')==='1'){document.getElementById('login-screen').classList.add('hidden');init()}
