@@ -174,7 +174,7 @@
 
 <script>
 /* ===== CONFIG ===== */
-const PWH = 'ZWNob0AyMDI2';
+const PWH = 'echo@2026';
 
 const lessons = [
   // Week 1: Jun 28 - Jul 5
@@ -208,10 +208,10 @@ let currentWeek = '';
 let currentCat = 'all';
 let todayStr; // set in init()
 
-/* ===== PASSWORD — btoa works on both HTTP and HTTPS ===== */
+/* ===== PASSWORD — direct comparison, zero dependencies ===== */
 function login(){
   const v=document.getElementById('pw').value;
-  if(btoa(v)===PWH){
+  if(v===PWH){
     sessionStorage.setItem('ea','1');
     document.getElementById('login-screen').classList.add('hidden');
     init()
