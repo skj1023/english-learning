@@ -174,7 +174,7 @@
 
 <script>
 /* ===== CONFIG ===== */
-const PWH = 'echo@2026';
+const PWH = 'b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f346584520e0c';
 
 const lessons = [
   // Week 1: Jun 28 - Jul 5
@@ -208,11 +208,15 @@ let currentWeek = '';
 let currentCat = 'all';
 let todayStr; // set in init()
 
-/* ===== PASSWORD — direct comparison, zero dependencies ===== */
-function login(){
+/* ===== PASSWORD — SHA-256 ===== */
+async function sha256(s){
+  const b=new TextEncoder().encode(s);
+  const h=await crypto.subtle.digest('SHA-256',b);
+  return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+async function login(){
   const v=document.getElementById('pw').value;
-  if(v===PWH){
-    sessionStorage.setItem('ea','1');
+  if(await sha256(v)===PWH){
     document.getElementById('login-screen').classList.add('hidden');
     init()
   }else{
@@ -401,8 +405,7 @@ function toggleDark(){
 // Restore dark mode
 try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');document.querySelectorAll('#darkBtn,#darkBtn2').forEach(b=>b.textContent='☀️')}}catch(e){}
 
-/* ===== BOOT ===== */
-if(sessionStorage.getItem('ea')==='1'){document.getElementById('login-screen').classList.add('hidden');init()}
+/* ===== BOOT — always show login screen, no session persistence ===== */
 </script>
 </body>
 </html>
