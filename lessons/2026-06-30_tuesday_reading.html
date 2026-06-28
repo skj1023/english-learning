@@ -15,30 +15,38 @@
   .section { background: #fff; border-radius: 12px; padding: 18px 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
   .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
   .section-title .time-tag { font-size: 11px; font-weight: 500; background: #e9ecef; color: #495057; padding: 2px 8px; border-radius: 8px; margin-left: auto; }
-  .article-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 10px; padding: 16px; margin-top: 8px; }
-  .article-box h2 { font-size: 18px; margin-bottom: 4px; }
-  .article-box .source { font-size: 12px; color: #6c757d; margin-bottom: 12px; }
-  .article-box .highlight { color: #e53935; font-weight: 600; }
-  .word-card { background: #f8f9fa; border-left: 3px solid #7b1fa2; padding: 12px 14px; margin-bottom: 8px; border-radius: 0 8px 8px 0; }
+
+  /* ── Collapsible Article ── */
+  .article-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 10px; margin-top: 8px; overflow: hidden; }
+  .article-header { padding: 14px 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; user-select: none; }
+  .article-header .icon { font-size: 14px; color: #7b1fa2; flex-shrink: 0; transition: transform .25s; margin-top: 2px; }
+  .article-header.open .icon { transform: rotate(90deg); }
+  .article-header .ah-main { flex: 1; }
+  .article-header .ah-main h2 { font-size: 17px; font-weight: 700; }
+  .article-header .ah-main .source { font-size: 12px; color: #6c757d; margin-top: 2px; }
+  .article-header .toggle-label { font-size: 12px; color: #7b1fa2; font-weight: 600; flex-shrink: 0; }
+  .article-body { display: none; padding: 0 16px 16px; border-top: 1px solid #e9ecef; padding-top: 14px; }
+  .article-body.open { display: block; }
+  .article-body p { margin-bottom: 12px; font-size: 15px; line-height: 1.8; }
+  .article-body .highlight { color: #e53935; font-weight: 600; }
+
+  /* ── Vocab / Expression Cards ── */
+  .word-card { background: #f8f9fa; border-left: 3px solid #7b1fa2; padding: 12px 14px; margin-bottom: 10px; border-radius: 0 8px 8px 0; }
+  .word-card:last-child { margin-bottom: 0; }
   .word-card .en { font-weight: 600; font-size: 15px; }
   .word-card .cn { font-size: 13px; color: #6c757d; margin-top: 2px; }
-  .word-card .example { font-size: 14px; color: #2d3436; margin-top: 6px; padding: 6px 10px; background: #fff; border-radius: 6px; border: 1px solid #e9ecef; }
+  .word-card .example { font-size: 14px; color: #2d3436; margin-top: 6px; padding: 6px 10px; background: #fff; border-radius: 6px; border: 1px solid #e9ecef; font-style: italic; }
   .q-item { padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 14px; }
   .q-item:last-child { border-bottom: none; }
   .task-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: 10px; padding: 14px 16px; }
   .task-box .task-title { font-weight: 700; color: #e65100; font-size: 14px; margin-bottom: 8px; }
   .footer { text-align: center; padding: 20px 0; font-size: 12px; color: #adb5bd; }
-  @media (prefers-color-scheme: dark) {
-    body { background: #1a1a2e; color: #e0e0e0; }
-    .section { background: #16213e; }
-    .article-box { background: #1a1a2e; border-color: #2d3436; }
-    .article-box h2 { color: #e0e0e0; }
-    .word-card { background: #1a1a2e; }
-    .word-card .example { background: #16213e; border-color: #2d3436; color: #b0b0b0; }
-    .q-item { border-bottom-color: #2d3436; }
-    .task-box { background: #2d1f00; border-color: #664300; }
-    .task-box .task-title { color: #ffb74d; }
-    .header { border-bottom-color: #2d3436; }
+  @media (max-width: 480px) {
+    .container { padding: 0; }
+    .header { padding: 20px 12px 14px; }
+    .section { border-radius: 0; margin-bottom: 10px; padding: 14px 12px; }
+    .article-header { padding: 12px 12px; }
+    .article-body { padding: 0 12px 12px; }
   }
 </style>
 </head>
@@ -50,64 +58,156 @@
     <div class="badge">阅读</div>
   </div>
 
+  <!-- ====== 通勤预习 ====== -->
   <div class="section">
     <div class="section-title">🌅 通勤预习 <span class="time-tag">白天路上</span></div>
-    <p style="font-size:14px;color:#6c757d;margin-bottom:12px;">先通读一遍文章，标记不认识的词，然后看关键词汇。</p>
+    <p style="font-size:14px;color:#6c757d;margin-bottom:12px;">先通读一遍文章，标记不认识的词和短语，然后看下方的词汇和表达解析。</p>
 
-    <div class="article-box">
-      <h2>Five Things You Need to Know About AI</h2>
-      <div class="source">MIT Technology Review · June 9, 2026 · Will Douglas Heaven</div>
-      <p>At SXSW London last week I gave a talk called "Five things you need to know about AI," in which I shared what I think are the biggest themes in AI right now.</p>
-      <p style="margin-top:8px;">Generative AI tools have already become <span class="highlight">mundane</span>, used by millions to automate everyday office tasks. It's no surprise that one of the biggest questions right now is what this all means for jobs. People are confused and scared.</p>
-      <p style="margin-top:8px;">The frustrating answer is that despite the <span class="highlight">hype</span> from the top about AI joining the workforce — and viral social media posts yelling that something big is happening — there is almost no data to say what effect this technology will have on employment. That's not to say it won't have an impact, but it's too soon to tell.</p>
-      <p style="margin-top:8px;">In theory, teams of AI agents working together could become assembly lines for white-collar work — doing to offices this century what Henry Ford's innovations did to factories in the 20th century. But most companies are still <span class="highlight">figuring that out</span>.</p>
-      <p style="margin-top:12px;font-size:13px;color:#6c757d;">🔗 <a href="https://www.technologyreview.com/2026/06/09/1138582/five-things-you-need-to-know-about-ai/" target="_blank" style="color:#4a90d9;">Read full article →</a></p>
+    <!-- Collapsible Full Article -->
+    <div class="article-box" id="articleBox">
+      <div class="article-header" id="articleToggle" onclick="toggleArticle()">
+        <div class="icon">▶</div>
+        <div class="ah-main">
+          <h2>Five Things You Need to Know About AI</h2>
+          <div class="source">MIT Technology Review · June 9, 2026 · Will Douglas Heaven</div>
+        </div>
+        <div class="toggle-label" id="toggleLabel">Read full article →</div>
+      </div>
+      <div class="article-body" id="articleBody">
+        <p>At SXSW London last week I gave a talk called "Five things you need to know about AI," in which I shared what I think are the biggest themes in AI right now. Here's a summary of the five big ideas.</p>
+
+        <p><strong>1. AI is becoming mundane — and that's a good thing.</strong> Generative AI tools have already become <span class="highlight">mundane</span>, used by millions to automate everyday office tasks like writing emails, summarizing documents, and generating code. It's no surprise that one of the biggest questions right now is what this all means for jobs. People are confused and scared. But the <span class="highlight">mundane</span> nature of AI — the fact that it's becoming an ordinary tool rather than a futuristic fantasy — is actually a sign of <span class="highlight">maturation</span>. Technologies become truly powerful when they disappear into the background.</p>
+
+        <p><strong>2. The job impact is real — but we don't have the data yet.</strong> The frustrating answer is that despite the <span class="highlight">hype</span> from the top about AI joining the workforce — and viral social media posts yelling that something big is happening — there is almost no data to say what effect this technology will have on employment. That's not to say it won't have an impact, but it's too soon to tell. Early studies suggest AI is <span class="highlight">augmenting</span> rather than replacing workers in most industries, but we're only at the beginning.</p>
+
+        <p><strong>3. AI agents are the next frontier.</strong> In theory, teams of AI agents working together could become assembly lines for white-collar work — doing to offices this century what Henry Ford's innovations did to factories in the 20th century. But most companies are still <span class="highlight">figuring that out</span>. An AI agent isn't just a chatbot — it's an autonomous system that can plan, execute multi-step tasks, and use tools. Companies like Microsoft and Google are racing to build agent platforms that can <span class="highlight">orchestrate</span> complex workflows across different software systems.</p>
+
+        <p><strong>4. Open-source models are changing the power balance.</strong> A year ago, the prevailing <span class="highlight">narrative</span> was that only the largest tech companies could build frontier AI models. That has changed dramatically. Open-source models like Llama 3 and Mistral have <span class="highlight">narrowed the gap</span> significantly, and fine-tuned versions now rival proprietary systems in many specific tasks. This has massive implications for <span class="highlight">sovereignty</span> and access — countries and companies that cannot afford to build their own models from scratch can now <span class="highlight">customize</span> open alternatives.</p>
+
+        <p><strong>5. Regulation is finally catching up.</strong> The AI debate in 2026 is no longer about whether to regulate, but how. The EU AI Act is now in effect, and countries around the world are <span class="highlight">drafting</span> their own frameworks. The biggest challenge is balancing innovation with safety. There's a growing consensus that we need <span class="highlight">transparency</span> requirements — companies should disclose what data their models were trained on and how they handle sensitive information. But the worry is that <span class="highlight">fragmented</span> regulation across different regions could slow down progress and create compliance burdens for smaller companies.</p>
+
+        <p style="font-size:13px;color:#6c757d;border-top:1px solid #e9ecef;padding-top:12px;margin-bottom:0;">🔗 Source: MIT Technology Review · <a href="https://www.technologyreview.com/2026/06/09/1138582/five-things-you-need-to-know-about-ai/" target="_blank" style="color:#4a90d9;">Read original →</a></p>
+      </div>
     </div>
+  </div>
 
-    <h4 style="font-size:15px;margin:12px 0 8px;">🔑 关键词汇</h4>
+  <!-- ====== 关键词汇 ====== -->
+  <div class="section">
+    <div class="section-title">🔑 关键词汇 <span class="time-tag">10个</span></div>
+
     <div class="word-card">
       <div class="en">① mundane — 平凡的 / 日常的</div>
-      <div class="cn">Something ordinary and not interesting or unusual</div>
+      <div class="cn">Something ordinary and not interesting or unusual. In the article, it's positive — AI becoming normal (= mature).</div>
       <div class="example">"AI is being used for mundane tasks like scheduling meetings."</div>
     </div>
     <div class="word-card">
       <div class="en">② hype — 炒作 / 大肆宣传</div>
-      <div class="cn">Exaggerated or excessive promotion or publicity</div>
+      <div class="cn">Exaggerated or excessive promotion. Often used negatively.</div>
       <div class="example">"There's a lot of hype around AI, but the real impact is still unclear."</div>
     </div>
     <div class="word-card">
-      <div class="en">③ figure out — 弄清楚 / 找到答案</div>
-      <div class="cn">To solve a problem or understand something</div>
+      <div class="en">③ figure out — 弄清楚 / 找到解决方法</div>
+      <div class="cn">Phrasal verb: to solve a problem or understand something through thinking.</div>
       <div class="example">"Companies are still figuring out how to use AI effectively."</div>
     </div>
     <div class="word-card">
-      <div class="en">④ impact — 影响 / 冲击</div>
-      <div class="cn">The effect or influence that something has</div>
-      <div class="example">"The long-term impact of AI on jobs remains uncertain."</div>
+      <div class="en">④ augment — 增强 / 补充</div>
+      <div class="cn">To make something larger, better, or more effective by adding to it. Key word — AI augments, not replaces.</div>
+      <div class="example">"AI is augmenting human workers rather than replacing them."</div>
     </div>
     <div class="word-card">
-      <div class="en">⑤ assembly line — 流水线 / 生产线</div>
-      <div class="cn">A production process where each worker/step does one specific task</div>
-      <div class="example">"AI agents could become assembly lines for white-collar work."</div>
+      <div class="en">⑤ orchestrate — 精心安排 / 协调</div>
+      <div class="cn">To organize a complex set of activities or systems so that they work together smoothly.</div>
+      <div class="example">"AI agents can orchestrate complex workflows across different software systems."</div>
+    </div>
+    <div class="word-card">
+      <div class="en">⑥ narrative — 叙事 / 说法</div>
+      <div class="cn">A story or account that people use to make sense of events. Common in journalism and business analysis.</div>
+      <div class="example">"The prevailing narrative is that AI will replace jobs, but the reality is more nuanced."</div>
+    </div>
+    <div class="word-card">
+      <div class="en">⑦ narrow the gap — 缩小差距</div>
+      <div class="cn">Useful phrase: to reduce the difference between two things.</div>
+      <div class="example">"Open-source models have narrowed the gap with proprietary systems."</div>
+    </div>
+    <div class="word-card">
+      <div class="en">⑧ sovereignty — 主权 / 自主权</div>
+      <div class="cn">The authority of a country to govern itself. In AI context: countries want AI independence.</div>
+      <div class="example">"Many countries are investing in AI sovereignty — building their own models instead of relying on big tech."</div>
+    </div>
+    <div class="word-card">
+      <div class="en">⑨ draft — 起草 / 拟定</div>
+      <div class="cn">Verb: to write a preliminary version of a document, law, or plan.</div>
+      <div class="example">"Governments around the world are drafting their own AI regulations."</div>
+    </div>
+    <div class="word-card">
+      <div class="en">⑩ fragmented — 碎片化的 / 不统一的</div>
+      <div class="cn">Broken into separate parts; not coordinated or unified.</div>
+      <div class="example">"Fragmented regulation across different regions could slow down AI development."</div>
     </div>
   </div>
 
+  <!-- ====== 核心表达 & 句型 ====== -->
   <div class="section">
-    <div class="section-title">📝 理解检测</div>
-    <div class="q-item"><strong>Q1:</strong> According to the article, what is the biggest question people have about AI right now?</div>
-    <div class="q-item"><strong>Q2:</strong> Why does the author say the answer is "frustrating"?</div>
-    <div class="q-item"><strong>Q3:</strong> What comparison does the author make about AI agents and Henry Ford?</div>
+    <div class="section-title">🧩 有用句型 <span class="time-tag">口语化</span></div>
+    <div class="word-card" style="border-left-color:#4a90d9;">
+      <div class="en">❶ That's not to say ... but ...</div>
+      <div class="cn">"这并不是说……但……" — 对自己观点加限定条件的万能句型</div>
+      <div class="example">"That's not to say AI won't have an impact, but it's too soon to tell."</div>
+    </div>
+    <div class="word-card" style="border-left-color:#4a90d9;">
+      <div class="en">❷ In theory ... but ...</div>
+      <div class="cn">"理论上……但……" — 区分理想和现实</div>
+      <div class="example">"In theory, AI agents could replace many jobs. But most companies are still figuring it out."</div>
+    </div>
+    <div class="word-card" style="border-left-color:#4a90d9;">
+      <div class="en">❸ The prevailing [noun] is that ...</div>
+      <div class="cn">"主流的[说法/观点]是……" — 表达主流看法的正式句式</div>
+      <div class="example">"The prevailing view is that open-source AI will democratize access."</div>
+    </div>
+    <div class="word-card" style="border-left-color:#4a90d9;">
+      <div class="en">❹ There's a growing consensus that ...</div>
+      <div class="cn">"越来越多人一致认为……" — 表示趋势观点</div>
+      <div class="example">"There's a growing consensus that AI transparency should be mandatory."</div>
+    </div>
   </div>
 
+  <!-- ====== 理解检测 ====== -->
+  <div class="section">
+    <div class="section-title">📝 理解检测 <span class="time-tag">5题</span></div>
+    <div class="q-item"><strong>Q1:</strong> Why does the author say AI becoming "mundane" is a good thing?</div>
+    <div class="q-item"><strong>Q2:</strong> What is the "frustrating answer" about AI and jobs?</div>
+    <div class="q-item"><strong>Q3:</strong> What makes an AI agent different from a regular chatbot?</div>
+    <div class="q-item"><strong>Q4:</strong> How have open-source models changed the AI landscape?</div>
+    <div class="q-item"><strong>Q5:</strong> What is the main challenge facing AI regulation?</div>
+  </div>
+
+  <!-- ====== 晚间练习 ====== -->
   <div class="section">
     <div class="section-title">🌙 晚间练习 <span class="time-tag">回家后</span></div>
     <div class="task-box">
       <div class="task-title">🎤 复述任务</div>
-      <p>Please summarize this article in <strong>3-5 sentences</strong> in your own words. Use at least 3 of the key expressions above.</p>
-      <p style="margin-top:8px;font-size:13px;color:#6c757d;">💡 Imagine you're telling a colleague what you read today.</p>
+      <p>Summarize the article in <strong>4-6 sentences</strong> in your own words. Use at least 4 of today's words/expressions.</p>
+      <p style="margin-top:8px;font-size:13px;color:#6c757d;">💡 Imagine you're explaining the key AI trends to a colleague over coffee.</p>
+    </div>
+    <div class="task-box" style="margin-top:10px;background:#f3e5f5;border-color:#ce93d8;">
+      <div class="task-title" style="color:#7b1fa2;">✍️ 写作升级</div>
+      <p>Rewrite this sentence using the pattern <strong>"That's not to say... but..."</strong>:</p>
+      <p style="font-style:italic;margin-top:4px;">"AI might replace some jobs, but it will also create new ones."</p>
     </div>
   </div>
   <div class="footer">Echo · 阅读训练课程</div>
 </div>
+
+<script>
+function toggleArticle(){
+  var body=document.getElementById('articleBody');
+  var hdr=document.getElementById('articleToggle');
+  var lbl=document.getElementById('toggleLabel');
+  var open=body.classList.toggle('open');
+  hdr.classList.toggle('open');
+  lbl.textContent=open?'▲ Collapse':'▼ Read full article →';
+}
+</script>
 </body>
 </html>
