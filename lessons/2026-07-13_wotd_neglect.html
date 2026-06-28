@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Word of the Day · neglect</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #1a1a2e;
+    background: #f8f9fa;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+  .header {
+    text-align: center;
+    padding: 28px 0 20px;
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 20px;
+  }
+  .header .label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin: 4px 0 2px;
+  }
+  .header .ipa {
+    font-size: 15px;
+    color: #6c757d;
+    font-weight: 400;
+  }
+  .header .part-of-speech {
+    font-size: 14px;
+    color: #4a90d9;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .section {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #1a1a2e;
+  }
+  .section-title .icon { font-size: 18px; }
+
+  .def-box {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .def-box p { font-size: 15px; line-height: 1.6; }
+
+  .example-box {
+    border-left: 3px solid #e53935;
+    background: #fff5f5;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-radius: 0 8px 8px 0;
+  }
+  .example-box:last-child { margin-bottom: 0; }
+  .example-box .en { font-size: 15px; }
+  .example-box .highlight {
+    color: #e53935;
+    font-weight: 600;
+  }
+  .example-box .context {
+    font-size: 13px;
+    color: #6c757d;
+    margin-top: 2px;
+  }
+
+  .syn-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .syn-box .tag {
+    background: #e3f2fd;
+    color: #1565c0;
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 14px;
+    font-weight: 500;
+  }
+  .syn-box .tag.ant {
+    background: #fce4ec;
+    color: #c62828;
+  }
+
+  .collocation {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .collocation .pattern {
+    font-weight: 600;
+    color: #2d3436;
+  }
+  .collocation .example {
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  .task-box {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .task-box .task-title {
+    font-weight: 700;
+    color: #e65100;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .task-box p { font-size: 14px; line-height: 1.6; }
+
+  .tip {
+    font-size: 13px;
+    color: #6c757d;
+    padding: 8px 0;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 12px;
+    color: #adb5bd;
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 14px 12px 60px; }
+    .section { padding: 14px 12px; }
+    .header h1 { font-size: 28px; }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e0e0e0; }
+    .section { background: #16213e; }
+    .section-title { color: #e0e0e0; }
+    .header { border-bottom-color: #2d3436; }
+    .header h1 { color: #e0e0e0; }
+    .def-box { background: #1a1a2e; }
+    .example-box { background: #2d1a1a; border-left-color: #ef5350; }
+    .collocation { background: #1a1a2e; }
+    .task-box { background: #2d1f00; border-color: #664300; }
+    .task-box .task-title { color: #ffb74d; }
+    .syn-box .tag { background: #1a237e; color: #90caf9; }
+    .syn-box .tag.ant { background: #4a1a1a; color: #ef9a9a; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="label">Word of the Day</div>
+    <h1>neglect</h1>
+    <div class="ipa">/nɪˈɡlekt/</div>
+    <div class="part-of-speech">verb · also noun</div>
+  </div>
+
+  <!-- Definition -->
+  <div class="section">
+    <div class="section-title"><span class="icon">📖</span> Definition</div>
+    <div class="def-box">
+      <p><strong>to fail to give proper care, attention, or time to someone or something</strong></p>
+      <p style="margin-top:6px;font-size:14px;color:#6c757d;">Unlike "ignore" (which is intentional), neglect often carries a sense of <em>unintentional or gradual</em> failing — you know you should do it, but you don't.</p>
+    </div>
+  </div>
+
+  <!-- Usage & Examples -->
+  <div class="section">
+    <div class="section-title"><span class="icon">💬</span> Examples</div>
+
+    <div class="example-box">
+      <div class="en">"We've been so busy that we <span class="highlight">neglected</span> to update the documentation."</div>
+      <div class="context">— at work, something slipped through the cracks</div>
+    </div>
+
+    <div class="example-box">
+      <div class="en">"Don't <span class="highlight">neglect</span> your health while chasing deadlines."</div>
+      <div class="context">— everyday advice, work-life balance</div>
+    </div>
+
+    <div class="example-box">
+      <div class="en">"The project failed because the team <span class="highlight">neglected</span> user feedback during development."</div>
+      <div class="context">— business/product context</div>
+    </div>
+
+    <div class="example-box">
+      <div class="en">"He <span class="highlight">neglected</span> to mention that the deadline had already passed."</div>
+      <div class="context">— conveniently forgot to share important info</div>
+    </div>
+  </div>
+
+  <!-- Synonyms & Antonyms -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🔗</span> Synonyms & Antonyms</div>
+    <div class="syn-box">
+      <span class="tag">ignore</span>
+      <span class="tag">disregard</span>
+      <span class="tag">overlook</span>
+      <span class="tag">omit</span>
+      <span class="tag">skip</span>
+    </div>
+    <div style="margin-top:8px;">
+      <div class="syn-box">
+        <span class="tag ant">care for</span>
+        <span class="tag ant">attend to</span>
+        <span class="tag ant">prioritize</span>
+        <span class="tag ant">maintain</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Collocations -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🧩</span> Common Collocations</div>
+
+    <div class="collocation">
+      <div class="pattern"><strong>neglect</strong> + [noun]</div>
+      <div class="example">neglect your health / neglect your duties / neglect customer feedback</div>
+    </div>
+    <div class="collocation">
+      <div class="pattern"><strong>neglect to</strong> + [verb]</div>
+      <div class="example">neglect to mention / neglect to update / neglect to inform</div>
+    </div>
+    <div class="collocation">
+      <div class="pattern">in a state of <strong>neglect</strong> (noun form)</div>
+      <div class="example">"The garden fell into a state of neglect."</div>
+    </div>
+  </div>
+
+  <!-- Your Turn -->
+  <div class="section">
+    <div class="section-title"><span class="icon">✍️</span> Your Turn</div>
+    <div class="task-box">
+      <div class="task-title">Practice Task</div>
+      <p>Write <strong>one sentence</strong> about something at work or in daily life that you (or your team) <strong>neglected</strong> to do recently.</p>
+      <p style="margin-top:6px;font-size:13px;color:#6c757d;">💡 Can pattern: "We neglected to ______ because ______."</p>
+      <p style="margin-top:6px;font-size:13px;color:#6c757d;">Send it back to me on Telegram — I'll review and optimize it.</p>
+    </div>
+  </div>
+
+  <!-- How to learn today's word -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🎯</span> How to Own This Word</div>
+    <ol style="padding-left:20px;font-size:14px;line-height:2;">
+      <li><strong>Read</strong> the definition and examples above — 2 minutes</li>
+      <li><strong>Say it aloud</strong> 5 times: /nɪˈɡlekt/ — 1 minute</li>
+      <li><strong>Think</strong> of one thing you've neglected recently — 1 minute</li>
+      <li><strong>Write</strong> your own sentence and send it to me — 2 minutes</li>
+      <li><strong>Try to use it</strong> this week when something slips your mind (very common in work meetings!)</li>
+    </ol>
+  </div>
+
+  <div class="footer">
+    Echo · Word of the Day · July 13, 2026
+  </div>
+</div>
+</body>
+</html>
