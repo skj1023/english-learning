@@ -39,6 +39,7 @@
   body.dark .empty{color:#555}
   body.dark .history-btn{background:#1a1a2e;border-color:#2d2d5e;color:#999}
   body.dark .history-btn:hover{background:#2d2d5e}
+  body.dark .week-btn.past{color:#555}
   body.dark .word-pill{background:#2d1a1a;border-color:#4a2a2a}
   body.dark .word-pill .wp-t{color:#e8e8e8}
 
@@ -76,7 +77,10 @@
   .week-tabs::-webkit-scrollbar{display:none}
   .week-btn{flex-shrink:0;padding:8px 14px;font-size:13px;font-weight:600;color:#999;background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
   .week-btn.active{color:#222;border-bottom-color:#4a90d9}
-  .history-btn{flex-shrink:0;padding:8px 10px;font-size:11px;font-weight:600;background:none;border:1px solid #e0e0e0;border-radius:6px;cursor:pointer;color:#999;white-space:nowrap;margin-left:auto}
+  .week-btn.past{opacity:.55;font-style:italic}
+  .week-btn.past:hover{opacity:1}
+  .week-btn.past.active{opacity:1;font-style:normal}
+  .history-btn{flex-shrink:0;padding:8px 10px;font-size:11px;font-weight:600;background:#fff;border:1px solid #e0e0e0;border-radius:6px;cursor:pointer;color:#999;white-space:nowrap;position:sticky;right:0;z-index:2;margin-left:auto}
 
   /* ── Category Tabs ── */
   .cat-tabs{display:flex;gap:8px;margin:0 0 10px}
@@ -293,7 +297,7 @@ var lessons=[
 var vocabBook=[
   {w:'neglect',d:'2026-07-13',m:0}
 ];
-var currentWeek='',currentCat='all',todayStr='',showHistory=false;
+var currentWeek='',currentCat='all',todayStr='',showHistory=false,_realWeek='';
 
 /* ===== Beijing Date ===== */
 function getBeijingDate(){
@@ -361,11 +365,25 @@ function buildWeeks(){
     if(end<now)pastKeys.push(k);
   });
   if(!currentWeek&&keys.length>0)currentWeek=keys[keys.length-1];
+  _realWeek=currentWeek;
 
-  // Show current + future weeks as tabs
+  // Past weeks (reversed: most recent first)
+  if(showHistory){
+    pastKeys.slice().reverse().forEach(function(k){
+      var end=addDays(k,6);
+      var btn=document.createElement('button');
+      btn.className='week-btn past';
+      btn.textContent=k.slice(5)+'-'+end.slice(5);
+      btn.dataset.week=k;
+      btn.addEventListener('click',function(){switchWeek(k)});
+      tabs.appendChild(btn);
+    });
+  }
+
+  // Current + future weeks
   keys.forEach(function(k){
     var end=addDays(k,6);
-    if(end<now)return; // skip past weeks
+    if(end<now)return;
     var btn=document.createElement('button');
     btn.className='week-btn';
     btn.textContent=k.slice(5)+'-'+end.slice(5);
@@ -374,11 +392,11 @@ function buildWeeks(){
     tabs.appendChild(btn);
   });
 
-  // History button for past weeks
+  // History button
   if(pastKeys.length>0){
     var hb=document.createElement('button');
     hb.className='history-btn';
-    hb.textContent='📜 Past';
+    hb.textContent=showHistory?'✕ Close':'📜 Past';
     hb.addEventListener('click',function(){toggleHistory()});
     tabs.appendChild(hb);
   }
@@ -396,8 +414,11 @@ function buildWeeks(){
 
 function toggleHistory(){
   showHistory=!showHistory;
+  if(!showHistory && _realWeek){
+    currentWeek=_realWeek;
+  }
+  buildWeeks();
   render();
-  document.querySelector('.history-btn').textContent=showHistory?'✕ Close':'📜 Past';
 }
 
 /* ===== SWITCH ===== */
