@@ -2,6 +2,7 @@
 
 import re
 import os
+import html
 import subprocess
 from datetime import datetime, timedelta, timezone
 
@@ -25,6 +26,18 @@ def format_date_display(date_str):
 
 # ─── VOCAB SYNC (original) ──────────────────────────────
 
+def normalize_pending_line(line):
+    line = line.strip()
+    line = re.sub(r'^[-*]\s+', '', line)
+    if not line:
+        return '', ''
+    # Allow Lance to write: hive — 蜂巢；a hive of activity...
+    # Only the clean English headword goes into vocabBook/file names.
+    parts = re.split(r'\s+[—–-]\s+|：|:', line, maxsplit=1)
+    word = parts[0].strip().lower()
+    note = parts[1].strip() if len(parts) > 1 else ''
+    return word, note
+
 def parse_pending_words(md_path):
     if not os.path.exists(md_path):
         return []
@@ -33,13 +46,15 @@ def parse_pending_words(md_path):
     words = []
     current_date = None
     for line in content.split('\n'):
-        line = line.strip()
-        date_match = re.match(r'^##\s*(\d{4}-\d{2}-\d{2})', line)
+        raw = line.strip()
+        date_match = re.match(r'^##\s*(\d{4}-\d{2}-\d{2})', raw)
         if date_match:
             current_date = date_match.group(1)
             continue
-        if current_date and line and not line.startswith('#') and not line.startswith('- ') and not line.startswith('Words '):
-            words.append((current_date, line.lower().strip()))
+        if current_date and raw and not raw.startswith('#') and not raw.startswith('Words '):
+            word, note = normalize_pending_line(raw)
+            if word:
+                words.append((current_date, word, note))
     return words
 
 def read_index(path):
@@ -61,12 +76,20 @@ def word_in_array(content, word):
         return True
     return False
 
-def generate_wotd_html(word, date):
+def js_escape(value):
+    return value.replace('\\', '\\\\').replace("'", "\\'")
+
+def filename_slug(word):
+    slug = re.sub(r'[^a-z0-9]+', '_', word.lower()).strip('_')
+    return slug or 'word'
+
+def generate_wotd_html(word, date, note=""):
     name = word.capitalize()
+    note_html = html.escape(note)
     y, m, d = date.split('-')
     months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     month_name = months[int(m)-1]
-    filename = f'{date}_wotd_{word}.html'
+    filename = f'{date}_wotd_{filename_slug(word)}.html'
     filepath = os.path.join(LESSONS_DIR, filename)
     if os.path.exists(filepath):
         return filename
@@ -75,7 +98,7 @@ def generate_wotd_html(word, date):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Word of the Day · {word}</title>
+<title>Saved Vocabulary · {word}</title>
 <style>
   *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
   body{{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.7;color:#1a1a2e;background:#f8f9fa;padding:0;-webkit-font-smoothing:antialiased}}
@@ -100,24 +123,25 @@ def generate_wotd_html(word, date):
 <body>
 <div class="container">
   <div class="header">
-    <div class="label">Word of the Day</div>
+    <div class="label">Saved Vocabulary</div>
     <h1>{word}</h1>
-    <div class="part-of-speech">verb</div>
+    <div class="part-of-speech">saved word</div>
   </div>
   <div class="section">
     <div class="section-title"><span class="icon">📖</span> Definition</div>
     <div class="def-box">
-      <p>Definition pending. This word was added to your vocab book for review.</p>
+      <p>This word was saved to your vocab book for review. A detailed note can be added later.</p>
+      <p style="margin-top:6px;font-size:14px;color:#6c757d;">{note_html}</p>
     </div>
   </div>
   <div class="section">
     <div class="section-title"><span class="icon">✍️</span> Practice</div>
     <div class="task-box">
       <div class="task-title">Coming Soon</div>
-      <p>A full lesson for <strong>{word}</strong> will be generated soon. For now, review the word's meaning and try to use it in a sentence.</p>
+      <p>Review <strong>{word}</strong> and try to use it in one sentence from your work or daily life.</p>
     </div>
   </div>
-  <div class="footer">Echo · Word of the Day · {month_name} {d}, {y}</div>
+  <div class="footer">Echo · Vocab Book · {month_name} {d}, {y}</div>
 </div>
 </body>
 </html>'''
@@ -134,13 +158,13 @@ def sync_vocab():
     content = read_index(INDEX_PATH)
     changes = False
     new_entries = []
-    for date, word in words:
+    for date, word, note in words:
         if word_in_array(content, word):
             print(f"  Already exists: {word}")
             continue
-        new_entry = f"  {{w:'{word}',d:'{date}',m:0}}"
+        new_entry = f"  {{w:'{js_escape(word)}',d:'{date}',m:0}}"
         new_entries.append((date, word, new_entry))
-        filename = generate_wotd_html(word, date)
+        filename = generate_wotd_html(word, date, note)
         changes = True
         print(f"  Added: {word} ({date})")
     if not changes:

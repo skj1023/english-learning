@@ -297,7 +297,7 @@ var lessons=[
 var vocabBook=[
   {w:'neglect',d:'2026-07-13',m:0}
 ,
-  {w:'hive — 蜂巢；a hive of activity 繁忙景象；《生化危机》地下蜂巢城市',d:'2026-06-29',m:0}];
+  {w:'hive',d:'2026-06-29',m:0}];
 var currentWeek='',currentCat='all',todayStr='',showHistory=false,_realWeek='';
 
 /* ===== Beijing Date ===== */
@@ -733,6 +733,7 @@ document.getElementById('vocabSort').addEventListener('click',function(e){
   document.querySelectorAll('#vocabSort button').forEach(function(x){x.classList.toggle('active',x===b)});
   renderVocab();
 });
+function vocabSlug(w){return String(w).toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')||'word'}
 function renderVocab(){
   var list=document.getElementById('vocabList');
   var items=vocabBook.filter(function(v){return _vocabTab==='lern'?!v.m:!!v.m});
@@ -750,7 +751,7 @@ function renderVocab(){
     card.className='vocab-card';
     card.addEventListener('click',function(){
       _fromVocab=true;
-      var item={t:v.w,i:'💡',g:'word',f:'lessons/'+v.d+'_wotd_'+v.w+'.html'};
+      var item={t:v.w,i:'💡',g:'word',f:'lessons/'+v.d+'_wotd_'+vocabSlug(v.w)+'.html'};
       openItem(item);
     });
     var tag=v.m?'mast':'lern';
