@@ -93,7 +93,7 @@ def generate_wotd_html(word, date, note=""):
     filepath = os.path.join(LESSONS_DIR, filename)
     if os.path.exists(filepath):
         return filename
-    html = f'''<!DOCTYPE html>
+    html_content = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -147,7 +147,7 @@ def generate_wotd_html(word, date, note=""):
 </html>'''
     os.makedirs(LESSONS_DIR, exist_ok=True)
     with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(html)
+        f.write(html_content)
     return filename
 
 def sync_vocab():
