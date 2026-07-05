@@ -131,8 +131,8 @@
   .footer{text-align:center;padding:24px 0;font-size:11px;color:#ccc}
 
   /* ── Vocab Book ── */
-  #vocabView{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
-  #vocabView.show{display:block}
+  #vocabView,#phraseView{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
+  #vocabView.show,#phraseView.show{display:block}
   .vocab-top{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#fff;position:sticky;top:0;z-index:100;transition:background .3s}
   .vocab-top h2{font-size:18px;font-weight:700;flex:1}
   .vb-btn{padding:6px 12px;font-size:12px;font-weight:600;background:none;border:1px solid #e0e0e0;border-radius:6px;cursor:pointer;color:#666;flex-shrink:0;display:flex;align-items:center;gap:4px;white-space:nowrap}
@@ -205,6 +205,7 @@
       <h1>📚 Echo</h1>
       <div style="display:flex;align-items:center;gap:6px">
         <button class="today-btn" id="vocabBtn">📕 Vocab</button>
+        <button class="today-btn" id="phraseBtn">🧩 Phrases</button>
         <button class="today-btn" id="todayBtn">📅 Today</button>
       </div>
     </div>
@@ -262,6 +263,22 @@
   <div id="vocabList"></div>
 </div>
 
+
+<div id="phraseView">
+  <div class="vocab-top">
+    <h2>🧩 Phrase Book</h2>
+  </div>
+  <div class="vocab-vt" id="phraseTabs">
+    <button class="active" data-pt="lern">🔴 Learning</button>
+    <button data-pt="mast">✅ Mastered</button>
+  </div>
+  <div class="vocab-sort" id="phraseSort">
+    <button data-ps="az">A→Z</button>
+    <button class="active" data-ps="date">By Date ↓</button>
+  </div>
+  <div id="phraseList"></div>
+</div>
+
 <div class="float-actions" id="floatActions">
   <button class="float-btn back-float-btn" id="backFloatBtn" style="display:none">← Back</button>
   <span style="flex:1"></span>
@@ -285,19 +302,21 @@ var lessons=[
   {d:'2026-07-03',w:'Fri',t:'optimize',i:'💡',g:'word',f:'lessons/2026-07-03_wotd_optimize.html'},
   {d:'2026-07-04',w:'Sat',t:'align',i:'💡',g:'word',f:'lessons/2026-07-04_wotd_align.html'},
   {d:'2026-07-05',w:'Sun',t:'streamline',i:'💡',g:'word',f:'lessons/2026-07-05_wotd_streamline.html'},
-  {d:'2026-07-06',w:'Mon',t:'SA Client Update',i:'🏢',g:'lesson',f:'lessons/2026-07-06_workplace_sa_client_update.html'},
+  {d:'2026-07-06',w:'Mon',t:'Critical Thinking and Education Systems',i:'🎓',g:'lesson',f:'lessons/2026-07-06_critical_thinking_education_systems.html'},
   {d:'2026-07-06',w:'Mon',t:'scope',i:'💡',g:'word',f:'lessons/2026-07-06_wotd_scope.html'},
-  {d:'2026-07-07',w:'Tue',t:'AI Reading',i:'📖',g:'lesson',f:'lessons/2026-07-07_ai_reading_healthcare_ai_risks.html'},
+  {d:'2026-07-07',w:'Tue',t:'Disagreeing with Clients in the AI Era',i:'💼',g:'lesson',f:'lessons/2026-07-07_disagreeing_with_clients_ai_era.html'},
   {d:'2026-07-07',w:'Tue',t:'compliant',i:'💡',g:'word',f:'lessons/2026-07-07_wotd_compliant.html'},
-  {d:'2026-07-08',w:'Wed',t:'OPC Dialogue',i:'🎤',g:'lesson',f:'lessons/2026-07-08_speaking_opc_client_dialogue.html'},
+  {d:'2026-07-08',w:'Wed',t:'SA Client Update',i:'🏢',g:'lesson',f:'lessons/2026-07-08_workplace_sa_client_update.html'},
   {d:'2026-07-08',w:'Wed',t:'clarify',i:'💡',g:'word',f:'lessons/2026-07-08_wotd_clarify.html'},
-  {d:'2026-07-09',w:'Thu',t:'Vocab Upgrade',i:'🔥',g:'lesson',f:'lessons/2026-07-09_vocab_upgrade_healthcare_cloud.html'},
+  {d:'2026-07-09',w:'Thu',t:'AI Reading',i:'📖',g:'lesson',f:'lessons/2026-07-09_ai_reading_healthcare_ai_risks.html'},
   {d:'2026-07-09',w:'Thu',t:'constraint',i:'💡',g:'word',f:'lessons/2026-07-09_wotd_constraint.html'},
-  {d:'2026-07-10',w:'Fri',t:'AI Listening',i:'🎬',g:'lesson',f:'lessons/2026-07-10_listening_ai_healthcare_talk.html'},
+  {d:'2026-07-10',w:'Fri',t:'OPC Dialogue',i:'🎤',g:'lesson',f:'lessons/2026-07-10_speaking_opc_client_dialogue.html'},
   {d:'2026-07-10',w:'Fri',t:'mitigate',i:'💡',g:'word',f:'lessons/2026-07-10_wotd_mitigate.html'},
   {d:'2026-07-11',w:'Sat',t:'concise',i:'💡',g:'word',f:'lessons/2026-07-11_wotd_concise.html'},
   {d:'2026-07-12',w:'Sun',t:'recap',i:'💡',g:'word',f:'lessons/2026-07-12_wotd_recap.html'},
-  {d:'2026-07-13',w:'Mon',t:'neglect',i:'💡',g:'word',f:'lessons/2026-07-13_wotd_neglect.html'}
+  {d:'2026-07-13',w:'Mon',t:'Vocab Upgrade',i:'🔥',g:'lesson',f:'lessons/2026-07-13_vocab_upgrade_healthcare_cloud.html'},
+  {d:'2026-07-13',w:'Mon',t:'neglect',i:'💡',g:'word',f:'lessons/2026-07-13_wotd_neglect.html'},
+  {d:'2026-07-14',w:'Tue',t:'AI Listening',i:'🎬',g:'lesson',f:'lessons/2026-07-14_listening_ai_healthcare_talk.html'}
 ];
 var vocabBook=[
   {w:'neglect',d:'2026-07-13',m:0}
@@ -308,6 +327,20 @@ var vocabBook=[
   {w:'bridge the gap between',d:'2026-06-29',m:0},
   {w:'elastic',d:'2026-06-29',m:0},
   {w:'pharmacovigilance',d:'2026-06-29',m:0}];
+var phraseBook=[
+  {p:'career-oriented',d:'2026-07-05',m:0},
+  {p:'textbook-based',d:'2026-07-05',m:0},
+  {p:'accept something blindly',d:'2026-07-05',m:0},
+  {p:'verify information',d:'2026-07-05',m:0},
+  {p:'form my own judgment',d:'2026-07-05',m:0},
+  {p:'understand their perspective',d:'2026-07-05',m:0},
+  {p:'push back politely',d:'2026-07-05',m:0},
+  {p:'align on the business goal',d:'2026-07-05',m:0},
+  {p:'professional judgment',d:'2026-07-05',m:0},
+  {p:'job displacement',d:'2026-07-05',m:0},
+  {p:'reskill workers',d:'2026-07-05',m:0},
+  {p:"Pandora's box",d:'2026-07-05',m:0}
+];
 var currentWeek='',currentCat='all',todayStr='',showHistory=false,_realWeek='';
 
 /* ===== Beijing Date ===== */
@@ -655,7 +688,7 @@ var _fromVocab=false,_vocabTab='lern',_vocabSort='date';
 
 /* ===== BACK / NAVIGATION ===== */
 function updateBackBtn(){
-  var show=document.getElementById('detail').classList.contains('show')||document.getElementById('vocabView').classList.contains('show');
+  var show=document.getElementById('detail').classList.contains('show')||document.getElementById('vocabView').classList.contains('show')||document.getElementById('phraseView').classList.contains('show');
   document.getElementById('backFloatBtn').style.display=show?'flex':'none';
 }
 document.getElementById('backFloatBtn').addEventListener('click',function(){
@@ -663,9 +696,13 @@ document.getElementById('backFloatBtn').addEventListener('click',function(){
     document.getElementById('detail').classList.remove('show');
     document.getElementById('todaySwitch').style.display='none';
     if(_fromVocab){_fromVocab=false;document.getElementById('vocabView').classList.add('show')}
+    else if(_fromPhrase){_fromPhrase=false;document.getElementById('phraseView').classList.add('show')}
     else{document.getElementById('content').classList.add('show')}
   }else if(document.getElementById('vocabView').classList.contains('show')){
     document.getElementById('vocabView').classList.remove('show');
+    document.getElementById('content').classList.add('show');
+  }else if(document.getElementById('phraseView').classList.contains('show')){
+    document.getElementById('phraseView').classList.remove('show');
     document.getElementById('content').classList.add('show');
   }
   updateBackBtn();
@@ -773,6 +810,60 @@ function renderVocab(){
     list.appendChild(card);
   });
 }
+
+/* ===== PHRASE BOOK ===== */
+var _fromPhrase=false,_phraseTab='lern',_phraseSort='date';
+document.getElementById('phraseBtn').addEventListener('click',showPhraseBook);
+function showPhraseBook(){
+  document.getElementById('content').classList.remove('show');
+  document.getElementById('phraseView').classList.add('show');
+  renderPhraseBook();
+  updateBackBtn();
+}
+document.getElementById('phraseTabs').addEventListener('click',function(e){
+  var b=e.target.closest('button');
+  if(!b||!b.dataset.pt)return;
+  _phraseTab=b.dataset.pt;
+  document.querySelectorAll('#phraseTabs button').forEach(function(x){x.classList.toggle('active',x===b)});
+  renderPhraseBook();
+});
+document.getElementById('phraseSort').addEventListener('click',function(e){
+  var b=e.target.closest('button');
+  if(!b||!b.dataset.ps)return;
+  _phraseSort=b.dataset.ps;
+  document.querySelectorAll('#phraseSort button').forEach(function(x){x.classList.toggle('active',x===b)});
+  renderPhraseBook();
+});
+function phraseSlug(p){return String(p).toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')||'phrase'}
+function renderPhraseBook(){
+  var list=document.getElementById('phraseList');
+  var items=phraseBook.filter(function(v){return _phraseTab==='lern'?!v.m:!!v.m});
+  if(items.length===0){
+    list.innerHTML='<div class="vocab-empty"><div class="big">📭</div>'+(_phraseTab==='lern'?'No phrases in learning yet':'No mastered phrases yet')+'</div>';
+    return;
+  }
+  var sorted=[].concat(items);
+  if(_phraseSort==='az'){sorted.sort(function(a,b){return a.p<b.p?-1:1})}
+  else{sorted.sort(function(a,b){return a.d<b.d?1:-1})}
+  list.innerHTML='';
+  sorted.forEach(function(v){
+    var card=document.createElement('div');
+    card.className='vocab-card';
+    card.addEventListener('click',function(){
+      _fromPhrase=true;
+      var item={t:v.p,i:'🧩',g:'phrase',f:'lessons/'+v.d+'_phrase_'+phraseSlug(v.p)+'.html'};
+      openItem(item);
+    });
+    var tag=v.m?'mast':'lern';
+    var dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var dt=new Date(v.d+'T12:00:00');
+    card.innerHTML='<div class="vw">🧩</div>'+
+      '<div class="vi"><div class="vt">'+v.p+'</div><div class="vm">'+v.d+' · '+dayNames[dt.getDay()]+'</div></div>'+
+      '<div class="vs '+tag+'">'+(v.m?'✅ Mastered':'🔴 Learning')+'</div>';
+    list.appendChild(card);
+  });
+}
+
 </script>
 </body>
 </html>
