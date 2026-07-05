@@ -292,7 +292,21 @@
   <div id="phraseList"></div>
 </div>
 
-
+<div class="btm-bar" id="btmBar">
+  <div class="btm-tabs" id="btmTabs">
+    <button class="btm-btn active" data-tab="home">🏠<span class="btm-lbl">Home</span></button>
+    <button class="btm-btn" data-tab="vocab">📕<span class="btm-lbl">Words</span></button>
+    <button class="btm-btn" data-tab="phrases">🧩<span class="btm-lbl">Phrases</span></button>
+    <button class="btm-btn" data-tab="past">📜<span class="btm-lbl">Past</span></button>
+  </div>
+  <div class="btm-right" id="btmRight">
+    <button class="btm-icon" id="darkBtn">🌙</button>
+    <button class="btm-icon" id="fsBtn">⛶</button>
+  </div>
+  <div class="btm-back-detail" id="backDetail" style="display:none">
+    <span class="back-pill" id="backPillBtn">← Back</span>
+  </div>
+</div>
 
 <script>
 var PWH='b900e5bd0b61b382086d2be1fd6249a48416e5f87e2cb1fd6b8f346584520e0c';
@@ -715,6 +729,17 @@ function updateBtmBar(){
 
 
 
+/* ===== BACK PILL ===== */
+function goBack(){
+  var d=document.getElementById('detail');
+  d.classList.remove('show');
+  if(_prevView&&_prevView!=='home'){switchTab(_prevView)}else{
+    document.getElementById('content').classList.add('show');
+    updateBtmBar();
+  }
+}
+document.getElementById('backPillBtn').addEventListener('click',goBack);
+
 /* ===== FULLSCREEN ===== */
 function goFullscreen(){
   if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}
@@ -732,7 +757,7 @@ function toggleDark(){
   try{sessionStorage.setItem('ed',isDark?'1':'0')}catch(e){}
 }
 document.getElementById('darkBtn').addEventListener('click',toggleDark);
-try{if(sessionStorage.getItem('ed')==='1'){document.body.classList.add('dark');
+try{var d=sessionStorage.getItem('ed');if(d==='1'||d===null){document.body.classList.add('dark');
 document.getElementById('darkBtn').textContent='☀️'}}catch(e){}
 
 /* ===== TODAY ===== */
@@ -761,7 +786,6 @@ document.getElementById('tsWord').addEventListener('click',function(){
 });
 
 /* ===== VOCAB BOOK ===== */
-document.getElementById('vocabBtn').addEventListener('click',showVocabBook);
 function showVocabBook(){
   document.getElementById('content').classList.remove('show');
   document.getElementById('vocabView').classList.add('show');
@@ -820,7 +844,6 @@ function renderVocab(){
 
 /* ===== PAST CONTENT ===== */
 var _prevView='home',_pastTab='unlearned',_pastSort='date';
-document.getElementById('pastBtn').addEventListener('click',showPastView);
 function pastKey(l){return l.g+':'+l.d+':'+l.t}
 function isLearned(l){return learnedItems.indexOf(pastKey(l))>=0}
 function showPastView(){
@@ -855,7 +878,18 @@ function renderPastView(){
   if(_pastSort==='az'){sorted.sort(function(a,b){return a.t<b.t?-1:1})}
   else{sorted.sort(function(a,b){if(a.d!==b.d)return a.d<b.d?1:-1;return a.g==='lesson'?-1:1})}
   list.innerHTML='';
+  var currentDate='';
   sorted.forEach(function(l){
+    if(l.d!==currentDate){
+      currentDate=l.d;
+      var sep=document.createElement('div');
+      sep.className='section-label';
+      sep.style.padding='0 16px';
+      var dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      var dt=new Date(l.d+'T12:00:00');
+      sep.textContent=l.d+' · '+dayNames[dt.getDay()];
+      list.appendChild(sep);
+    }
     var card=document.createElement('div');
     card.className='vocab-card';
     card.addEventListener('click',function(){_fromPast=true;openItem(l)});
@@ -871,7 +905,6 @@ function renderPastView(){
 
 /* ===== PHRASE BOOK ===== */
 var _phraseTab='lern',_phraseSort='date';
-document.getElementById('phraseBtn').addEventListener('click',showPhraseBook);
 function showPhraseBook(){
   document.getElementById('content').classList.remove('show');
   document.getElementById('phraseView').classList.add('show');
@@ -920,23 +953,6 @@ function renderPhraseBook(){
     list.appendChild(card);
   });
 }
-
 </script>
-
-<div class="btm-bar" id="btmBar">
-  <div class="btm-tabs" id="btmTabs">
-    <button class="btm-btn active" data-tab="home">🏠<span class="btm-lbl">Home</span></button>
-    <button class="btm-btn" data-tab="vocab">📕<span class="btm-lbl">Words</span></button>
-    <button class="btm-btn" data-tab="phrases">🧩<span class="btm-lbl">Phrases</span></button>
-    <button class="btm-btn" data-tab="past">📜<span class="btm-lbl">Past</span></button>
-  </div>
-  <div class="btm-right" id="btmRight">
-    <button class="btm-icon" id="darkBtn">🌙</button>
-    <button class="btm-icon" id="fsBtn">⛶</button>
-  </div>
-  <div class="btm-back-detail" id="backDetail" style="display:none">
-    <span class="back-pill" id="backPillBtn">← Back</span>
-  </div>
-</div>
 </body>
 </html>
