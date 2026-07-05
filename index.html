@@ -131,8 +131,8 @@
   .footer{text-align:center;padding:24px 0;font-size:11px;color:#ccc}
 
   /* ── Vocab Book ── */
-  #vocabView,#phraseView{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
-  #vocabView.show,#phraseView.show{display:block}
+  #vocabView,#phraseView,#pastView{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
+  #vocabView.show,#phraseView.show,#pastView.show{display:block}
   .vocab-top{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#fff;position:sticky;top:0;z-index:100;transition:background .3s}
   .vocab-top h2{font-size:18px;font-weight:700;flex:1}
   .vb-btn{padding:6px 12px;font-size:12px;font-weight:600;background:none;border:1px solid #e0e0e0;border-radius:6px;cursor:pointer;color:#666;flex-shrink:0;display:flex;align-items:center;gap:4px;white-space:nowrap}
@@ -206,6 +206,7 @@
       <div style="display:flex;align-items:center;gap:6px">
         <button class="today-btn" id="vocabBtn">📕 Vocab</button>
         <button class="today-btn" id="phraseBtn">🧩 Phrases</button>
+        <button class="today-btn" id="pastBtn">📜 Past</button>
         <button class="today-btn" id="todayBtn">📅 Today</button>
       </div>
     </div>
@@ -263,6 +264,22 @@
   <div id="vocabList"></div>
 </div>
 
+
+
+<div id="pastView">
+  <div class="vocab-top">
+    <h2>📜 Past Content</h2>
+  </div>
+  <div class="vocab-vt" id="pastTabs">
+    <button class="active" data-past="unlearned">🔴 Not Learned</button>
+    <button data-past="learned">✅ Learned</button>
+  </div>
+  <div class="vocab-sort" id="pastSort">
+    <button data-pasts="az">A→Z</button>
+    <button class="active" data-pasts="date">By Date ↓</button>
+  </div>
+  <div id="pastList"></div>
+</div>
 
 <div id="phraseView">
   <div class="vocab-top">
@@ -340,6 +357,9 @@ var phraseBook=[
   {p:'job displacement',d:'2026-07-05',m:0},
   {p:'reskill workers',d:'2026-07-05',m:0},
   {p:"Pandora's box",d:'2026-07-05',m:0}
+];
+var learnedItems=[
+  'word:2026-06-28:leverage'
 ];
 var currentWeek='',currentCat='all',todayStr='',showHistory=false,_realWeek='';
 
@@ -440,8 +460,8 @@ function buildWeeks(){
   if(pastKeys.length>0){
     var hb=document.createElement('button');
     hb.className='history-btn';
-    hb.textContent=showHistory?'✕ Close':'📜 Past';
-    hb.addEventListener('click',function(){toggleHistory()});
+    hb.textContent='📜 Past';
+    hb.addEventListener('click',function(){showPastView()});
     tabs.appendChild(hb);
   }
 
@@ -688,7 +708,7 @@ var _fromVocab=false,_vocabTab='lern',_vocabSort='date';
 
 /* ===== BACK / NAVIGATION ===== */
 function updateBackBtn(){
-  var show=document.getElementById('detail').classList.contains('show')||document.getElementById('vocabView').classList.contains('show')||document.getElementById('phraseView').classList.contains('show');
+  var show=document.getElementById('detail').classList.contains('show')||document.getElementById('vocabView').classList.contains('show')||document.getElementById('phraseView').classList.contains('show')||document.getElementById('pastView').classList.contains('show');
   document.getElementById('backFloatBtn').style.display=show?'flex':'none';
 }
 document.getElementById('backFloatBtn').addEventListener('click',function(){
@@ -697,12 +717,16 @@ document.getElementById('backFloatBtn').addEventListener('click',function(){
     document.getElementById('todaySwitch').style.display='none';
     if(_fromVocab){_fromVocab=false;document.getElementById('vocabView').classList.add('show')}
     else if(_fromPhrase){_fromPhrase=false;document.getElementById('phraseView').classList.add('show')}
+    else if(_fromPast){_fromPast=false;document.getElementById('pastView').classList.add('show')}
     else{document.getElementById('content').classList.add('show')}
   }else if(document.getElementById('vocabView').classList.contains('show')){
     document.getElementById('vocabView').classList.remove('show');
     document.getElementById('content').classList.add('show');
   }else if(document.getElementById('phraseView').classList.contains('show')){
     document.getElementById('phraseView').classList.remove('show');
+    document.getElementById('content').classList.add('show');
+  }else if(document.getElementById('pastView').classList.contains('show')){
+    document.getElementById('pastView').classList.remove('show');
     document.getElementById('content').classList.add('show');
   }
   updateBackBtn();
@@ -807,6 +831,58 @@ function renderVocab(){
     card.innerHTML='<div class=\"vw\">💡</div>'+
       '<div class=\"vi\"><div class=\"vt\">'+v.w+'</div><div class=\"vm\">'+v.d+' · '+dayNames[dt.getDay()]+'</div></div>'+
       '<div class=\"vs '+tag+'\">'+(v.m?'✅ Mastered':'🔴 Learning')+'</div>';
+    list.appendChild(card);
+  });
+}
+
+
+/* ===== PAST CONTENT ===== */
+var _fromPast=false,_pastTab='unlearned',_pastSort='date';
+document.getElementById('pastBtn').addEventListener('click',showPastView);
+function pastKey(l){return l.g+':'+l.d+':'+l.t}
+function isLearned(l){return learnedItems.indexOf(pastKey(l))>=0}
+function showPastView(){
+  document.getElementById('content').classList.remove('show');
+  document.getElementById('pastView').classList.add('show');
+  renderPastView();
+  updateBackBtn();
+}
+document.getElementById('pastTabs').addEventListener('click',function(e){
+  var b=e.target.closest('button');
+  if(!b||!b.dataset.past)return;
+  _pastTab=b.dataset.past;
+  document.querySelectorAll('#pastTabs button').forEach(function(x){x.classList.toggle('active',x===b)});
+  renderPastView();
+});
+document.getElementById('pastSort').addEventListener('click',function(e){
+  var b=e.target.closest('button');
+  if(!b||!b.dataset.pasts)return;
+  _pastSort=b.dataset.pasts;
+  document.querySelectorAll('#pastSort button').forEach(function(x){x.classList.toggle('active',x===b)});
+  renderPastView();
+});
+function renderPastView(){
+  var list=document.getElementById('pastList');
+  var items=lessons.filter(function(l){return l.d<todayStr});
+  items=items.filter(function(l){return _pastTab==='learned'?isLearned(l):!isLearned(l)});
+  if(items.length===0){
+    list.innerHTML='<div class="vocab-empty"><div class="big">📭</div>'+(_pastTab==='learned'?'No learned past content yet':'No unlearned past content')+'</div>';
+    return;
+  }
+  var sorted=[].concat(items);
+  if(_pastSort==='az'){sorted.sort(function(a,b){return a.t<b.t?-1:1})}
+  else{sorted.sort(function(a,b){if(a.d!==b.d)return a.d<b.d?1:-1;return a.g==='lesson'?-1:1})}
+  list.innerHTML='';
+  sorted.forEach(function(l){
+    var card=document.createElement('div');
+    card.className='vocab-card';
+    card.addEventListener('click',function(){_fromPast=true;openItem(l)});
+    var tag=_pastTab==='learned'?'mast':'lern';
+    var dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var dt=new Date(l.d+'T12:00:00');
+    card.innerHTML='<div class="vw">'+l.i+'</div>'+
+      '<div class="vi"><div class="vt">'+l.t+'</div><div class="vm">'+l.d+' · '+dayNames[dt.getDay()]+' · '+(l.g==='word'?'Word':'Lesson')+'</div></div>'+
+      '<div class="vs '+tag+'">'+(_pastTab==='learned'?'✅ Learned':'🔴 Not Learned')+'</div>';
     list.appendChild(card);
   });
 }
