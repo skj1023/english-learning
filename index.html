@@ -536,6 +536,7 @@ function buildWeeks(){
 
 /* ===== TAB SWITCHING ===== */
 function switchTab(tab){
+  window.scrollTo(0,0);
   document.getElementById('detail').classList.remove('show');
   ['content','vocabView','phraseView','pastView'].forEach(function(v){document.getElementById(v).classList.remove('show');});
   if(tab==='home') document.getElementById('content').classList.add('show');
@@ -556,10 +557,12 @@ document.getElementById('btmTabs').addEventListener('click',function(e){
 
 /* ===== SWITCH ===== */
 function switchWeek(w){
+  window.scrollTo(0,0);
   currentWeek=w;saveState();render();
   document.querySelectorAll('.week-btn').forEach(function(b){b.classList.toggle('active',b.dataset.week===w)});
 }
 function switchCat(c){
+  window.scrollTo(0,0);
   currentCat=c;saveState();render();
   document.querySelectorAll('.cat-btn').forEach(function(b){
     b.classList.toggle('active',b.textContent.indexOf(c==='all'?'All':c==='lessons'?'Lessons':'Words')>=0);
@@ -663,6 +666,7 @@ function render(){
 /* ===== OPEN ITEM ===== */
 var _currentItem=null;
 function openItem(item){
+  window.scrollTo(0,0);
   _currentItem=item;
   document.getElementById('content').classList.remove('show');
   var d=document.getElementById('detail');
@@ -802,6 +806,7 @@ function updateBtmBar(){
 
 /* ===== BACK PILL ===== */
 function goBack(){
+  window.scrollTo(0,0);
   var d=document.getElementById('detail');
   d.classList.remove('show');
   if(_prevView&&_prevView!=='home'){switchTab(_prevView)}else{
