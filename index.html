@@ -148,6 +148,8 @@
   body.dark .igi .section-inner .isi-item .isi-chev{color:#48484a}
 
   /* ── Detail ── */
+  #content{display:none;max-width:640px;margin:0 auto;padding:0 0 76px;min-height:100dvh}
+  #content.show{display:block}
   #detail{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
   #detail.show{display:block}
   .detail-top{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);padding:10px 16px;display:flex;align-items:center;gap:8px}
@@ -162,7 +164,7 @@
   .footer{text-align:center;padding:20px 0;font-size:11px;color:#c7c7cc}
 
   /* ── Views ── */
-  #vocabView,#phraseView,#pastView{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
+  #vocabView,#phraseView,#pastView{display:none;max-width:640px;margin:0 auto;padding:0 0 60px;min-height:100dvh}
   #vocabView.show,#phraseView.show,#pastView.show{display:block}
   .vocab-top{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;transition:background .35s}
   .vocab-top h2{font-size:22px;font-weight:700;flex:1;color:var(--label);transition:color .35s}
