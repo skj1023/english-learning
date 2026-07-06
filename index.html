@@ -36,9 +36,6 @@
   body.dark .login-box input{background:#000;border-color:#2c2c2e;color:#f5f5f7}
   body.dark .login-box h1{color:#f5f5f7}
   body.dark .login-box p{color:#8e8e93}
-  body.dark .detail-top{background:rgba(0,0,0,.85)}
-  body.dark .detail-top .back-btn{background:#1c1c1e;border-color:#2c2c2e;color:#98989d}
-  body.dark .detail-top .dt-btn{background:#1c1c1e;border-color:#2c2c2e;color:#98989d}
   body.dark .lesson-frame{border-color:#2c2c2e;background:#1c1c1e}
   body.dark .footer{color:#48484a}
   body.dark .section-label{color:#8e8e93}
@@ -60,8 +57,6 @@
   body.dark .vocab-card .vm{color:#8e8e93}
   body.dark .vocab-card .vs.lern{background:#4a2a0a;color:#ffb74d}
   body.dark .vocab-card .vs.mast{background:#1a3a1a;color:#81c784}
-  body.dark .ts-btn{background:#1c1c1e;border-color:#2c2c2e;color:#636366}
-  body.dark .ts-btn.active{background:#004C99;border-color:#004C99;color:#fff}
   body.dark .back-pill{background:rgba(10,132,255,.2);color:#f5f5f7}
   body.dark .focus-card .fi-b{background:#0A84FF}
   body.dark .igi .section-inner{background:#1c1c1e}
@@ -152,10 +147,6 @@
   #content.show{display:block}
   #detail{display:none;max-width:640px;margin:0 auto;padding:0 0 60px}
   #detail.show{display:block}
-  .detail-top{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);padding:10px 16px;display:flex;align-items:center;gap:8px}
-  .detail-top .back-btn{padding:6px 12px;background:rgba(0,0,0,.06);border:none;border-radius:8px;cursor:pointer;font-size:14px;color:#007AFF;display:flex;align-items:center;gap:4px;flex-shrink:0;font-weight:500}
-  .detail-top .spacer{flex:1}
-  .detail-top .dt-btn{width:34px;height:34px;border-radius:8px;border:1px solid #e0e0e0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
   .lesson-frame{border:none;border-radius:12px;overflow:hidden;background:#fff;margin:0 16px 16px}
   .lesson-frame iframe{width:100%;height:100dvh;border:none;display:block}
 
@@ -278,14 +269,6 @@
 </div>
 
 <div id="detail">
-  <div class="detail-top">
-    <button class="back-btn" id="detailBackBtn">← Back</button>
-    <div class="today-switch" id="todaySwitch">
-      <button class="ts-btn active" id="tsLesson" title="Today's Lesson">📖</button>
-      <button class="ts-btn" id="tsWord" title="Today's Word">💡</button>
-    </div>
-    <div class="spacer"></div>
-  </div>
   <div class="lesson-frame"><iframe id="iframe"></iframe></div>
 </div>
 
@@ -817,7 +800,6 @@ function goBack(){
   }
 }
 document.getElementById('backPillBtn').addEventListener('click',goBack);
-document.getElementById('detailBackBtn').addEventListener('click',goBack);
 
 /* ===== FULLSCREEN ===== */
 function goFullscreen(){
@@ -840,29 +822,16 @@ try{var d=sessionStorage.getItem('ed');if(d==='1'||d===null){document.body.class
 document.getElementById('darkBtn').textContent='☀️'}}catch(e){}
 
 /* ===== TODAY ===== */
-var _tdL=null,_tdW=null;
 document.getElementById('todayBtn').addEventListener('click',goToday);
 function goToday(){
   var items=lessons.filter(function(l){return l.d===todayStr});
   if(items.length===0){
     switchWeek(getWeekStart(todayStr));window.scrollTo(0,0);return;
   }
-  _tdL=null;_tdW=null;
-  items.forEach(function(l){if(l.g==='lesson')_tdL=l;else if(l.g==='word')_tdW=l});
-  var sw=document.getElementById('todaySwitch');
-  if(_tdL&&_tdW){
-    sw.style.display='flex';
-    document.getElementById('tsLesson').classList.add('active');
-    document.getElementById('tsWord').classList.remove('active');
-  }else{sw.style.display='none'}
-  openItem(_tdL||_tdW);
+  var tdL=items.filter(function(l){return l.g==='lesson'})[0];
+  var tdW=items.filter(function(l){return l.g==='word'})[0];
+  openItem(tdL||tdW);
 }
-document.getElementById('tsLesson').addEventListener('click',function(){
-  if(_tdL){this.classList.add('active');document.getElementById('tsWord').classList.remove('active');openItem(_tdL)}
-});
-document.getElementById('tsWord').addEventListener('click',function(){
-  if(_tdW){this.classList.add('active');document.getElementById('tsLesson').classList.remove('active');openItem(_tdW)}
-});
 
 /* ===== VOCAB BOOK ===== */
 function showVocabBook(){
