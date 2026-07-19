@@ -363,9 +363,28 @@ var lessons=[
   {d:'2026-07-12',w:'Sun',t:'recap',i:'💡',g:'word',f:'lessons/2026-07-12_wotd_recap.html'},
   {d:'2026-07-13',w:'Mon',t:'Vocab Upgrade',i:'🔥',g:'lesson',f:'lessons/2026-07-13_vocab_upgrade_healthcare_cloud.html'},
   {d:'2026-07-13',w:'Mon',t:'neglect',i:'💡',g:'word',f:'lessons/2026-07-13_wotd_neglect.html'},
-  {d:'2026-07-14',w:'Tue',t:'AI Listening',i:'🎬',g:'lesson',f:'lessons/2026-07-14_listening_ai_healthcare_talk.html'}
+  {d:'2026-07-14',w:'Tue',t:'AI Listening',i:'🎬',g:'lesson',f:'lessons/2026-07-14_listening_ai_healthcare_talk.html'},
+  {d:'2026-07-20',w:'Mon',t:'SA Discovery Call',i:'🏢',g:'lesson',f:'lessons/2026-07-20_workplace_sa_discovery_call.html'},
+  {d:'2026-07-20',w:'Mon',t:'assess',i:'💡',g:'word',f:'lessons/2026-07-20_wotd_assess.html'},
+  {d:'2026-07-21',w:'Tue',t:'AI Reading: Kimi K3',i:'📖',g:'lesson',f:'lessons/2026-07-21_ai_reading_kimi_k3.html'},
+  {d:'2026-07-21',w:'Tue',t:'rival',i:'💡',g:'word',f:'lessons/2026-07-21_wotd_rival.html'},
+  {d:'2026-07-22',w:'Wed',t:'OPC Budget Pushback',i:'🎤',g:'lesson',f:'lessons/2026-07-22_speaking_opc_budget_pushback.html'},
+  {d:'2026-07-22',w:'Wed',t:'lean',i:'💡',g:'word',f:'lessons/2026-07-22_wotd_lean.html'},
+  {d:'2026-07-23',w:'Thu',t:'Healthcare AI Vocabulary',i:'🔥',g:'lesson',f:'lessons/2026-07-23_vocab_upgrade_healthcare_ai.html'},
+  {d:'2026-07-23',w:'Thu',t:'predictability',i:'💡',g:'word',f:'lessons/2026-07-23_wotd_predictability.html'},
+  {d:'2026-07-24',w:'Fri',t:'TED AI Listening',i:'🎬',g:'lesson',f:'lessons/2026-07-24_listening_ted_ai_education.html'},
+  {d:'2026-07-24',w:'Fri',t:'augment',i:'💡',g:'word',f:'lessons/2026-07-24_wotd_augment.html'},
+  {d:'2026-07-25',w:'Sat',t:'threshold',i:'💡',g:'word',f:'lessons/2026-07-25_wotd_threshold.html'},
+  {d:'2026-07-26',w:'Sun',t:'refine',i:'💡',g:'word',f:'lessons/2026-07-26_wotd_refine.html'}
 ];
 var vocabBook=[
+  {w:'assess',d:'2026-07-20',m:0},
+  {w:'rival',d:'2026-07-21',m:0},
+  {w:'lean',d:'2026-07-22',m:0},
+  {w:'predictability',d:'2026-07-23',m:0},
+  {w:'augment',d:'2026-07-24',m:0},
+  {w:'threshold',d:'2026-07-25',m:0},
+  {w:'refine',d:'2026-07-26',m:0},
   {w:'neglect',d:'2026-07-13',m:0}
 ,
   {w:'hive',d:'2026-06-29',m:0},
@@ -580,7 +599,9 @@ function render(){
     wp.classList.add('show');
     document.getElementById('wordTitle').textContent=wordItem.t;
     document.getElementById('wordMeta').textContent=todayStr+' · '+wordItem.w;
-    document.getElementById('wordBtn').onclick=function(){openItem(wordItem)};
+    var wordBtn=document.getElementById('wordBtn');
+    wordBtn.replaceWith(wordBtn.cloneNode(true));
+    document.getElementById('wordBtn').addEventListener('click',function(){openItem(wordItem)});
   }else{wp.classList.remove('show')}
 
   // Focus card
@@ -590,7 +611,9 @@ function render(){
     fc.classList.add('show');
     document.getElementById('focusTitle').textContent=lessonItem.t;
     document.getElementById('focusMeta').textContent=todayStr+' · '+lessonItem.w;
-    document.getElementById('focusBtn').onclick=function(){openItem(lessonItem)};
+    var focusBtn=document.getElementById('focusBtn');
+    focusBtn.replaceWith(focusBtn.cloneNode(true));
+    document.getElementById('focusBtn').addEventListener('click',function(){openItem(lessonItem)});
   }else{fc.classList.remove('show')}
 
   // List - iOS Inset Grouped style
